@@ -1,4 +1,4 @@
-// App.jsx
+// src/App.jsx
 
 import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -14,6 +14,7 @@ import ShippingPolicy from './components/ShippingPolicy';
 import RefundPolicy from './components/RefundPolicy';
 import Checkout from './components/Checkout';
 import OrderSummary from './components/OrderSummary';
+import TrackOrder from './components/TrackOrder';
 
 function App() {
   return (
@@ -58,6 +59,7 @@ const MainContent = () => {
             <Route path="/contact-info" element={<ContactInfo />} />
             <Route path="/shipping-policy" element={<ShippingPolicy />} />
             <Route path="/refund-policy" element={<RefundPolicy />} />
+            <Route path="/track-order" element={<TrackOrder />} />
           </Routes>
         </div>
         <Footer />

@@ -51,6 +51,16 @@ function Checkout({ totalAmount }) {
     return newErrors;
   };
 
+  const generateOrderNumber = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+  
+    return `${year}${month}${day}-${hours}${minutes}`;
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = validateForm();
@@ -58,8 +68,9 @@ function Checkout({ totalAmount }) {
       setErrors(newErrors);
       setFormSubmitted(true);
     } else {
+      const orderNumber = generateOrderNumber();
       // Redirect to order summary page with form data
-      navigate('/order-summary', { state: { ...formData, totalAmount } });
+      navigate('/order-summary', { state: { ...formData, totalAmount, orderNumber } });
     }
   };
   
