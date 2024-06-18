@@ -1,0 +1,49 @@
+/* Navbar.css */
+.navbar {
+  background-color: #31473A; /* English Holly color */
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: 60px; /* Adjust height as needed */
+  width: 100%; /* Ensure the navbar spans the full width */
+  position: fixed; /* Keep the navbar at the top */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Ensure the navbar is above other elements */
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo {
+  height: 40px; /* Adjust the height as needed */
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar-link {
+  color: #fff; /* White text color */
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.2em; /* Adjust font size as needed */
+}
+
+.navbar-link:hover {
+  color: #333; /* Darker grey hover color */
+}

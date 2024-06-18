@@ -1,0 +1,180 @@
+/* OrderDetails.css */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  overflow: hidden; /* Prevent default scrolling on body */
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.order-details-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  width: 100%; /* Ensure the container takes full width */
+}
+
+.order-details-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.order-details-content h1 {
+  font-size: 2em;
+  color: #333;
+}
+
+.empty-order {
+  text-align: center;
+  margin-top: 20px;
+  position: relative;
+}
+
+.cart {
+  position: relative;
+  width: 400px; /* Increase size to make cart image larger */
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.cart-image {
+  width: 100%;
+  height: auto;
+}
+
+.falling-items {
+  position: absolute;
+  top: -100px; /* Start further above the container */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Make sure clicks pass through the items */
+}
+
+.item {
+  position: absolute;
+  top: -100px; /* Start further above the container */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 3em; /* Increase size of the items */
+  animation: fall 3s infinite; /* Increase duration for slower fall */
+}
+
+.item:nth-child(2) {
+  animation-delay: 1s; /* Increase delay */
+}
+
+.item:nth-child(3) {
+  animation-delay: 2s; /* Increase delay */
+}
+
+.item:nth-child(4) {
+  animation-delay: 3s; /* Increase delay */
+}
+
+@keyframes fall {
+  0% {
+    transform: translate(-50%, -200px); /* Start further above */
+  }
+  100% {
+    transform: translate(-50%, 300px); /* Adjust distance to fall into the cart */
+  }
+}
+
+.no-orders-message {
+  font-size: 1.5em;
+  color: #666;
+  margin-top: 20px;
+}
+
+.order-list {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.order-item {
+  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+  color: #333; /* Dark text color */
+  padding: 20px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  width: 100%; /* Full width */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.order-image {
+  width: 150px; /* Fixed width for the image container */
+  margin-right: 20px;
+}
+
+.order-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.order-details {
+  flex: 1;
+}
+
+.order-details p {
+  margin-bottom: 5px;
+  color: #333; /* Ensure the text is dark */
+}
+
+.view-details {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-details-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.view-details-button:hover {
+  background-color: #0056b3;
+}
+
+/* Footer */
+.order-details-footer {
+  width: 100%;
+  padding: 2px 5px; /* Reduce padding to make footer smaller */
+  background-color: #333;
+  color: white;
+  text-align: center;
+  box-sizing: border-box;
+  font-size: 0.7em; /* Reduce font size to make footer text smaller */
+  position: relative; /* Make the footer part of the scrolling content */
+  margin-top: auto; /* Push footer to the bottom of the page */
+}
