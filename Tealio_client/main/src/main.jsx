@@ -7,5 +7,6 @@ import './input.css';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
+    <DeliveryTable />
   </React.StrictMode>,
 )
