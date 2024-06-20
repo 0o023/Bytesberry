@@ -115,9 +115,29 @@ async function putStatus(req, res) {
     }
 };
 
-module.exports = { insertOrders, putStatus, getOrders };
+async function getOrderDetails(req, res) {
+    try {
+      const result = await pool.query('SELECT * FROM public.get_all_order_details()');
+      res.json(result.rows);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server error');
+    }
+  };
 
+  async function deleteOrderAndDetails(req, res) {
+    const { order_id } = req.params; // Assuming order_id is passed as a URL parameter
+    try {
+      const result = await pool.query('SELECT public.delete_order_and_details($1)', [order_id]);
+      res.status(200).send('Order and its details deleted successfully');
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server error');
+    }
+  };
+  
 
-module.exports = { insertOrders, putStatus,getOrders };
+module.exports = { insertOrders, putStatus, getOrders, getOrderDetails, deleteOrderAndDetails };
+
 
 
