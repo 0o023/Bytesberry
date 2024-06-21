@@ -12,7 +12,6 @@ function OrderSummary() {
     lastName = '',
     email = '',
     address = '',
-    apartment = '',
     pinCode = '',
     paymentMethod = false,
     totalAmount = 0
@@ -29,7 +28,7 @@ function OrderSummary() {
           <p><strong>Order Number:</strong> {orderNumber}</p>
           <p><strong>Name:</strong> {firstName} {lastName}</p>
           <p><strong>Email:</strong> {email}</p>
-          <p><strong>Address:</strong> {address}, {apartment}</p>
+          <p><strong>Address:</strong> {address}</p>
           <p><strong>PIN Code:</strong> {pinCode}</p>
           <p><strong>Payment Method:</strong> {paymentMethod ? 'Cash On Delivery' : 'Not Selected'}</p>
           <p><strong>Total Amount:</strong> Rs {totalAmount}</p>
