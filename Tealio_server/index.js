@@ -1,5 +1,9 @@
 const express = require('express');
-const app = express();
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const cartRoutes = require('./routes/cartRoutes');
+
+
 const cors=require('cors');
 const pool =require("./db");
 const bodyParser=require('body-parser');
@@ -14,6 +18,16 @@ cartRoutes(app);
 
 module.exports=app;
 
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
+const PORT = 8000;
+
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
+
+// Routes
+app.use('/api/cart', cartRoutes);
+
+
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

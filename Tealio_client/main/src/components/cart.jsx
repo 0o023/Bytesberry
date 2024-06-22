@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useCart } from './CartContext';
 import { X } from 'react-feather';
@@ -81,5 +82,6 @@ const SideCart = () => {
 };
 
 export default SideCart;
+
 
 

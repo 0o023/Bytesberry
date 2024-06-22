@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useContext } from 'react';
 import api from '../API/cart.api';
 
@@ -15,6 +16,7 @@ export const CartProvider = ({ children }) => {
   const closeCart = () => {
     setCartOpen(false);
   };
+
 
   const [cartItems, setCartItems] = useState([]);
 
@@ -98,7 +100,8 @@ export const CartProvider = ({ children }) => {
       openCart,
       closeCart
     }}>
-      {children}
+     {children}
     </CartContext.Provider>
   );
 };
+
