@@ -1,12 +1,13 @@
-const Pool = require("pg").Pool;
 
-const pool = new Pool({
-    user: "postgres",
-    password: "Hira202100295",
-    host: "localhost",
-    port: 5432,
-    database: "Tealio"
+const Pool=require("pg").Pool;
+
+const pool=new Pool({
+    user:"postgres",
+    password:"123456",
+    host:"localhost",
+    port:5432,
+    database:"tealio_local_db"
 });
 
+module.exports= pool;
 
-module.exports = pool;

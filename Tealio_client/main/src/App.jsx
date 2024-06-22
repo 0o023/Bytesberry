@@ -34,7 +34,6 @@ const MainContent = () => {
     const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
     setTotalAmount(total);
   };
-
   const { cartOpen } = useCart();
 
   useEffect(() => {
@@ -51,6 +50,9 @@ const MainContent = () => {
         <Navbar />
         <div className="pt-20">
           <Routes>
+
+            <Route path="/" element={<Hero  />} />
+            <Route path="/form" element={<BasicForm />} />
             <Route path="/" element={<Hero />} />
             <Route path="/checkout" element={<Checkout totalAmount={totalAmount} />} />
             <Route path="/order-summary" element={<OrderSummary />} />
@@ -77,6 +79,12 @@ const BlurWrapper = ({ children }) => {
   );
 };
 
+
+const SideCartWithRef = React.forwardRef((props, ref) => {
+  return <div ref={ref}><SideCart {...props} /></div>;
+});
+
+
 const CartWrapper = () => {
   const { cartOpen, closeCart } = useCart();
   const cartRef = useRef(null);
@@ -99,7 +107,8 @@ const CartWrapper = () => {
     };
   }, [cartOpen, closeCart]);
 
-  return <SideCart ref={cartRef} />;
+
+  return <SideCartWithRef ref={cartRef} />;
 };
 
 export default App;
