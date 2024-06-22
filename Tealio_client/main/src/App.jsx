@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef,useState } from 'react';
+import { forwardRef } from 'react';
 import Navbar from './components/navbar';
 import Footer from './components/footer';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -8,8 +9,11 @@ import SideCart from './components/cart';
 import { CartProvider, useCart } from './components/CartContext';
 
 function App() {
+
+  
+
   return (
-    <CartProvider>
+    <CartProvider >
       <Router>
         <MainContent />
         <CartWrapper />
@@ -29,13 +33,15 @@ const MainContent = () => {
     }
   }, [cartOpen]);
 
+  
+
   return (
     <div className="relative min-h-screen flex flex-col">
       <BlurWrapper>
         <Navbar />
         <div className="pt-20">
           <Routes>
-            <Route path="/" element={<Hero />} />
+            <Route path="/" element={<Hero  />} />
             <Route path="/form" element={<BasicForm />} />
           </Routes>
         </div>
@@ -53,6 +59,10 @@ const BlurWrapper = ({ children }) => {
     </div>
   );
 };
+
+const SideCartWithRef = React.forwardRef((props, ref) => {
+  return <div ref={ref}><SideCart {...props} /></div>;
+});
 
 const CartWrapper = () => {
   const { cartOpen, closeCart } = useCart();
@@ -76,7 +86,8 @@ const CartWrapper = () => {
     };
   }, [cartOpen, closeCart]);
 
-  return <SideCart ref={cartRef} />;
+  return <SideCartWithRef ref={cartRef} />;
 };
+
 
 export default App;
