@@ -1,0 +1,184 @@
+.product-detail-page {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto; /* Enable vertical scrolling */
+  }
+  
+  .product-detail-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 400px; /* Add margin to move the content down */                       /* made changes */ 
+  }
+  
+  .product-info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #E6F5E1; /* Very light and subtle green background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* Space between image container and details */
+    width: 100%; /* Increase width to 100% */
+  }
+  
+  .product-image {
+    width: 150px; /* Adjust width as needed */                                          /* made changes */
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 20px; /* Space between image and product name */                     /* you can make changes */
+  }
+  
+  .view-product-name {                            /* It was clashing its name with OrderDetails css product name */
+    font-size: 2em;
+    font-style: normal;
+    color: #333;
+  }
+
+  .delivery-info {
+    display: flex;
+    align-items: center;
+    background-color: #FFFFFF; /* White background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 10px; /* Space between product name and delivery info */
+    position: relative; /* For absolute positioning of the icon */
+    width: 100%;
+  }
+  
+  
+  .delivery-info p {
+    margin: 0px 0;                                      /* made chnages */
+    font-size: 1.2em;                                  /* made changes */
+    color: black;
+  }
+
+  .delivery-icon {
+    width: 60px; /* Adjust size as needed */
+    height: auto;
+    position: absolute;
+    left: 150px; /* Adjust to move the icon towards the right */                    /* made changes */
+    top: 50%;
+    transform: translateY(-50%); /* Center the icon vertically */
+  }
+  
+  .delivery-text {
+    margin-left: 400px; /* Adjust to provide space for the icon */                   /* made changes */
+    text-align: left;
+  }
+  
+  .order-info-container, .customer-info-container, .payment-info-container, .total-price-container {
+    background-color: #E6F5E1; /* Very light and subtle green background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Full width */
+    margin-bottom: 20px; /* Space between order info and product details */
+    text-align: left; /* Align text to the left */
+  }
+  
+  .order-info-heading, .customer-info-heading, .payment-info-heading, .total-price-heading {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: left; /* Align heading to the left */
+  }
+
+  /* Might delete */
+  .order-info-container, .customer-info-container, .payment-info-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .order-info-container p, .customer-info-container p, .payment-info-container p{
+    margin: 5px 0;
+    font-size: 1em;
+    color: #333;
+  }
+  .separator {
+    padding: 0 40px; /* Add padding around the separator */
+  }
+
+  .product-details {
+    width: 100%;
+    max-width: 600px; /* Limit the width of the details section */
+    background-color: #E6F5E1; /* Light green background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .product-details p {
+    font-size: 1em;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .product-details p strong {
+    font-weight: bold;
+  }
+  
+  .product-detail-footer {
+    width: 100%;
+    padding: 10px 0;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    font-size: 0.8em;
+    margin-top: auto;
+  }
+
+  .total-price-container {
+    display: flex;
+  flex-direction: column; /* Ensure the sub-container stacks below the total price */
+  align-items: flex-start;
+  }
+  
+  .total-price-amount {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: black;
+    align-self: flex-end; /* Move total price to the right */
+    margin-top: -40px; /* Adjust this value as needed to move the amount up */
+    margin-right: 40px; /* Adjust this value as needed to move the amount to the left */
+  }
+  
+  
+
+  .pay-on-delivery-info {
+    display: flex;
+    align-items: center;
+    background-color: #FFFFFF; /* White background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 10px; /* Space between product name and delivery info */
+    position: relative; /* For absolute positioning of the icon */
+    width: 100%;
+  }
+  
+  .pay-on-delivery-icon {
+    width: 60px; /* Adjust size as needed */
+    height: auto;
+    position: absolute;
+    left: 150px; /* Adjust to move the icon towards the right */                    /* made changes */
+    top: 50%;
+    transform: translateY(-50%); /* Center the icon vertically */
+  }
+  
+  .pay-on-delivery-text {
+    font-size: 1.2em;
+    color: #333;
+    margin-left: 400px; /* Adjust to provide space for the icon */                   /* made changes */
+    text-align: left;
+  } 
+  

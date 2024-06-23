@@ -1,5 +1,5 @@
 // I am making a connection with the Postgres SQL database by using pool object. I am also calling the function place_order from the database in this backend server code. 
-
+/*
 const pool = require("../db"); // db.js file exports the pool object
 const { orderSchema } = require ('../schemas/orders.db');
 
@@ -102,3 +102,40 @@ async function placeOrder(req, res) {
   }
   
   module.exports = { placeOrder, getOrders, deleteOrders };
+
+  */
+
+const pool = require("../db");
+const {Validation} = require("../schemas/orders.schema");
+
+
+async function insertOrders(req, res) {
+    try {
+        const { error,value } = Validation.validate(req.body);
+        if(error){
+            return res.status(400).json({error: error.details[0].message});
+        }
+        const {order_date, billing_add, payment_mode, order_status, order_delivered_date, order_no, payment_status, order_total, customer_email, customer_phone_no } = value;
+
+        const query = 'SELECT insert_order_keys($1, $2, $3, $4, $5, $6,$7,$8,$9,$10)';
+        console.log([order_date, billing_add, payment_mode, order_status, order_delivered_date, order_no, payment_status, order_total, customer_email, customer_phone_no]);
+        const result = await pool.query(query, [order_date, billing_add, payment_mode, order_status, order_delivered_date, order_no, payment_status, order_total, customer_email, customer_phone_no]);
+        res.status(200).json(result.rows);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ error: 'Database error' });
+    }
+};
+
+async function deleteOrderAndDetails(req, res) {
+  const { order_id } = req.params; // Assuming order_id is passed as a URL parameter
+  try {
+    const result = await pool.query('SELECT public.delete_order_and_details($1)', [order_id]);
+    res.status(200).send('Order and its details deleted successfully');
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+module.exports = { insertOrders, deleteOrderAndDetails };

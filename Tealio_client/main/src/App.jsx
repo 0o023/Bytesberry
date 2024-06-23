@@ -62,6 +62,7 @@ import Shipping from './components/Shipping';
 import Delivered from './components/Delivered';
 import OrderDetails from './components/OrderDetails'; // Import the OrderDetails component
 import Footer from './components/footer'; // Import the Footer component
+import ProductDetail from './components/ProductDetail'; // Import the ProductDetail component
 
 function App() {
   return (
@@ -88,6 +89,10 @@ function App() {
           />
           <Route path="/order-details" element={<OrderDetails />} />
           <Route
+            path="/order-details/:id"
+            element={<ProductDetail />}
+          />
+          <Route
             path="/cart"
             element={
               <>
@@ -110,3 +115,4 @@ function App() {
 }
 
 export default App;
+

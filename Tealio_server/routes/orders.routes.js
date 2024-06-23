@@ -1,3 +1,4 @@
+/*
 const { placeOrder, getOrders, deleteOrders } = require('../controllers/orders.controller');
 
 module.exports = function (app) {
@@ -11,4 +12,13 @@ module.exports = function (app) {
   //Define route for deleting order by its order ID
   app.delete('/place_order/:orderId', deleteOrders);
 
+};
+
+*/
+
+const { insertOrders, deleteOrderAndDetails } = require('../controllers/orders.controller'); // Correct path to shipped.js
+
+module.exports = function(app) {
+    app.post('/insert_order_keys', insertOrders);
+    app.delete('/delete_orders/:order_id',deleteOrderAndDetails);
 };

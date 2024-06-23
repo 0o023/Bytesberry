@@ -1,108 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
+  @apply m-0 p-0 w-full h-full;
   font-family: Arial, sans-serif;
 }
 
 #root {
-  width: 100%;
-  height: 100%;
+  @apply w-full h-full;
 }
 
 .App {
-  text-align: center;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative; /* Ensure positioning context for child elements */
-  padding-top: 80px; /* Add padding to account for fixed navbar */
-  background-color: #F5F5DC; /* Set the background color to a lighter beige */
+  @apply text-center w-full h-full flex flex-col items-center justify-center relative pt-20 bg-beige;
 }
 
 .App-header {
-  background-color: transparent; /* Remove background color to make it transparent */
-  padding: 20px;
-  border-radius: 8px;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: black;
-  width: 100%; /* Ensure the header takes full width */
-  box-sizing: border-box;
-  margin-top: 60px; /* Add margin to lower the text */
+  @apply bg-transparent p-5 rounded-lg min-h-screen flex flex-col items-center justify-center text-black w-full mt-16;
 }
 
 .main-heading {
-  font-size: 2em; /* Adjust the text size to be smaller */
-  font-weight: bold; /* Make the text bold */
-  color: black; /* Black color for the heading */
-  font-style: italic; /* Italics for the text */
-  text-align: center; /* Center the text */
-  margin: 10px 0; /* Add some margin for spacing */
+  @apply text-5xl font-bold text-black italic text-center my-2; /* Increased text size */
 }
 
 .container {
-  display: flex;
-  justify-content: space-around;
-  width: 100%; /* Take full width of the page */
-  margin: 40px auto 20px auto; /* Add margin-top to lower the position */
-  flex-wrap: wrap; /* Allow wrapping to display in multiple lines if needed */
-  overflow-x: auto; /* Allow horizontal scrolling if needed */
-  padding: 0 20px; /* Add padding to the container */
-  box-sizing: border-box;
+  @apply flex justify-around w-full my-10 flex-wrap overflow-x-auto px-5;
 }
 
 .card {
-  background-color: #fff; /* Ensure cards have a solid white background */
-  border-radius: 20px; /* Adjust border radius for a smoother, more rounded look */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Enhance shadow for a more pronounced effect */
-  width: 200px; /* Adjusted width */
-  height: 100px; /* Adjusted height to accommodate larger image */
-  margin: 10px; /* Increased margin for better spacing */
-  text-align: left;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
-  flex-shrink: 0; /* Prevent shrinking */
-  display: flex; /* Use flexbox to align content */
-  align-items: center; /* Center content vertically */
-  padding: 10px 20px; /* Add padding for better spacing */
-  cursor: pointer; /* Change cursor to pointer to indicate clickable */
+  @apply bg-light-green rounded-2xl shadow-md w-300px h-200px m-5 p-6 flex items-center relative cursor-pointer transform transition-transform hover:-translate-y-1 hover:shadow-lg hover:bg-darker-green;
 }
 
 .card:hover {
-  transform: translateY(-2px); /* Lift up slightly on hover */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Darken shadow on hover */
+  @apply bg-darker-green shadow-lg;
 }
 
 .card img {
-  width: 40px; /* Adjust the width of the image */
-  height: auto;
-  margin-right: 20px; /* Add margin to separate image and text */
+  @apply w-70px h-auto mx-auto my-5;
 }
 
 .card-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  @apply px-5;
 }
 
 .card-content h2 {
-  font-size: 1em; /* Adjust font size */
-  margin: 0; /* Remove margin for better alignment */
-  color: #333; /* Color for card headings */
+  @apply text-5xl text-black mb-2; /* Increased text size */
 }
 
 .card-content p {
-  font-size: 0.8em; /* Adjust font size */
-  color: #666; /* Color for card text */
-  margin: 0; /* Remove default margin */
+  @apply text-xl text-black; /* Increased text size */
 }
 
+.arrow {
+  @apply absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center justify-center text-gray-400;
+}
+
+.arrow svg {
+  @apply w-7 h-7;
+}
