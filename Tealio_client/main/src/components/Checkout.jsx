@@ -61,6 +61,7 @@ function Checkout({ totalAmount }) {
   
     return `${year}${month}${day}${hours}${minutes}`;
   };
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = validateForm();
