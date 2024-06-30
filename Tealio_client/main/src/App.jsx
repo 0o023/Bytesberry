@@ -6,7 +6,6 @@ import Footer from './components/Footer';
 import Hero from './components/heroPage';
 import SideCart from './components/cart';
 import { CartProvider, useCart } from './components/CartContext';
-import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsOfService from './components/TermsOfService';
 import ContactInfo from './components/ContactInfo';
 import ShippingPolicy from './components/ShippingPolicy';
@@ -54,7 +53,6 @@ const MainContent = () => {
             <Route path="/" element={<Hero />} />
             <Route path="/checkout" element={<Checkout totalAmount={totalAmount} />} />
             <Route path="/order-summary" element={<OrderSummary />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/contact-info" element={<ContactInfo />} />
             <Route path="/shipping-policy" element={<ShippingPolicy />} />

@@ -4,9 +4,8 @@ const pool = new Pool({
     user: "postgres",
     password: "Hira202100295",
     host: "localhost",
-    port: 5432,
-    database: "Tealio"
+    database: "Tealio",
+    port: 5432
 });
-
 
 module.exports = pool;

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Checkout({ totalAmount }) {
-
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
@@ -61,7 +61,20 @@ function Checkout({ totalAmount }) {
   
     return `${year}${month}${day}${hours}${minutes}`;
   };
-  const handleSubmit = (e) => {
+
+  const [sentData, setsentData] = useState({
+    order_date: '',
+    billing_add: '',
+    payment_mode: 'Cod',
+    order_status: 'initiated',
+    order_no: 0,
+    payment_status: 'successful',
+    order_total: 1000,
+    customer_email: '',
+    customer_phone_no: 0
+  });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
@@ -69,12 +82,49 @@ function Checkout({ totalAmount }) {
       setFormSubmitted(true);
     } else {
       const orderNumber = generateOrderNumber();
-      // Redirect to order summary page with form data
-      navigate('/order-summary', { state: { ...formData, totalAmount, orderNumber } });
+      const orderDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+
+      // Update sentData with formData
+      const updatedSentData = {
+        
+        order_date: orderDate,
+        billing_add: `${formData.address}, ${formData.apartment}, ${formData.city}, ${formData.state}, ${formData.pinCode}, ${formData.country}`,
+        payment_mode: 'Cod',
+        order_status: 'initiated',
+        order_no: orderNumber,
+        payment_status:'successful',
+        customer_email: formData.email,
+        order_total: 1000,
+        customer_phone_no: formData.phone
+      };
+      setsentData(updatedSentData);
+
+      console.log("Updated sentData:", updatedSentData); // Log the updated sentData
+      
+      try {
+        const response = await axios.post('http://localhost:5000/insert_orders', updatedSentData);
+        console.log('Order response:', response.data);
+      } catch (error) {
+        if (error.response) {
+          // Server responded with a status code outside the 2xx range
+          console.error('Response error:', error.response.data);
+        } else if (error.request) {
+          // Request was made but no response was received
+          console.error('Request error:', error.request);
+        } else {
+          // Other errors
+          console.error('Error', error.message);
+        }
+        console.error('Error config:', error.config);
+      }
+      
+      
+
+      // Redirect to order summary page with form data and sentData
+      navigate('/order-summary', { state: { ...formData, totalAmount, orderNumber, updatedSentData } });
     }
   };
-  
-console.log(formData);
+
   return (
     <div className="p-10 bg-bgcolor min-h-screen">
       <div className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
@@ -264,24 +314,20 @@ console.log(formData);
               <input
                 type="checkbox"
                 name="paymentMethod"
-                
-                checked={formData.paymentMethod }
+                checked={formData.paymentMethod}
                 onChange={handleChange}
                 className="mr-2"
               />
-             Cash On Delivery
+              Cash On Delivery
             </label>
           </div>
-          
 
           <div className="text-center">
-            <button type="submit" onSubmit={handleSubmit} className="bg-btgreen text-white px-4 py-2 rounded">
+            <button type="submit" className="bg-btgreen text-white px-4 py-2 rounded">
               Place Order
             </button>
           </div>
         </form>
-        
-
       </div>
     </div>
   );
