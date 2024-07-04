@@ -1,0 +1,106 @@
+/* Ensure the root, html, and body take up full height */
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #FEFDED; /* Apply the background color here */
+  }
+  
+  /* Ensure the main App container takes up the remaining height */
+  .App {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  
+  /* Main content area to take full height minus the footer */
+  .main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Namespaced AdminHomePage Styles */
+  .admin-homepage {
+    padding: 30px;
+    flex-grow: 1;
+  }
+  
+  .admin-home-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #A1C398;
+    padding: 10px 20px;
+    border-bottom: 2px solid #ddd;
+    margin-top: 60px; /* Adjust this value as needed */
+  }
+  
+  .admin-welcome-text {
+    font-size: 36px;
+    font-weight: bold;
+    color: #ffffff;
+    text-align: center;
+  }
+  
+  .admin-content-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 40px; /* Reduced margin-top to move the content up */
+  }
+  
+  .admin-left-content {
+    flex: 1;
+    padding-right: 30px;
+  }
+  
+  .admin-photo {
+    width: 100%; /* Adjusted to 100% to fit the container */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .admin-right-content {
+    flex: 1;
+  }
+  
+  .admin-right-content h2 {
+    color: #121111;
+    font-family: "Times New Roman", serif;
+  }
+  
+  .admin-right-content p {
+    font-family: "Verdana", sans-serif;
+    color: #0e5435;
+    line-height: 1.6;
+  }
+  
+  /* Footer styles */
+  .footer {
+    background-color: #3B5249;
+    color: #faf9f9;
+    padding: 10px 0;
+    text-align: center;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+  }
+  
+  .no-line {
+    border-top: none;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .footer-bottom {
+    margin-top: 10px;
+  }
+  

@@ -20,7 +20,7 @@ html, body {
 }
 
 .main-heading {
-  @apply text-5xl font-bold text-black italic text-center my-2; /* Increased text size */
+  @apply text-5xl font-bold text-black italic text-center my-2;
 }
 
 .container {
@@ -29,10 +29,6 @@ html, body {
 
 .card {
   @apply bg-light-green rounded-2xl shadow-md w-300px h-200px m-5 p-6 flex items-center relative cursor-pointer transform transition-transform hover:-translate-y-1 hover:shadow-lg hover:bg-darker-green;
-}
-
-.card:hover {
-  @apply bg-darker-green shadow-lg;
 }
 
 .card img {
@@ -44,11 +40,11 @@ html, body {
 }
 
 .card-content h2 {
-  @apply text-5xl text-black mb-2; /* Increased text size */
+  @apply text-5xl text-black mb-2;
 }
 
 .card-content p {
-  @apply text-xl text-black; /* Increased text size */
+  @apply text-xl text-black;
 }
 
 .arrow {
@@ -57,4 +53,12 @@ html, body {
 
 .arrow svg {
   @apply w-7 h-7;
+}
+
+.table-component tbody tr:nth-child(even) {
+  background-color: #eaf0d4 !important;
+}
+
+.table-component tbody tr:nth-child(odd) {
+  background-color: #e4e4ca !important;
 }

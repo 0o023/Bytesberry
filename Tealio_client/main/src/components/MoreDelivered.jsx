@@ -3,9 +3,9 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Navbar from './navbar';
 import Footer from './footer';
-import './ProductDetail.css';
+import './MoreDelivered.css';
 
-function ProductDetail() {
+function MoreDelivered() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -14,7 +14,7 @@ function ProductDetail() {
   useEffect(() => {
     async function fetchProduct() {
       try {
-        const response = await axios.get('http://localhost:5000/get_all_order_details');
+        const response = await axios.get('http://localhost:5000/get_delivered_orders');
         const orders = Array.isArray(response.data) ? response.data : [];
         const foundProduct = orders.find(order => order.order_id.toString() === id); // orders.find: Finds the product that matches the id from the URL.
 
@@ -34,14 +34,13 @@ function ProductDetail() {
     fetchProduct();
   }, [id]);
 
-  //Utility function 
+  // Utility function
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-
-  //Conditional Rendering 
+  // Conditional Rendering
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -55,13 +54,13 @@ function ProductDetail() {
   }
 
   return (
-    <div className="App product-detail-page">
+    <div className="App more-delivered-page">
       <Navbar />
-      <div className="product-detail-container">
-        <div className="order-info">
+      <div className="more-delivered-container">
+        <div className="delivered-info">
           <p><strong>Order No:</strong> {product.order_no}</p>
         </div>
-        <div className="product-details-table">
+        <div className="delivered-details-table">
           <table>
             <thead>
               <tr>
@@ -76,7 +75,7 @@ function ProductDetail() {
             <tbody>
               <tr>
                 <td>
-                  <div className="product-details-cell">
+                  <div className="delivered-details-cell">
                     <img src={product.file_url} alt={product.product_name} className="product-image" />
                     <div>
                       <p><strong>{product.product_name}</strong></p>
@@ -121,9 +120,9 @@ function ProductDetail() {
           </table>
         </div>
       </div>
-      <Footer hideLine={true} hideGallery={true} className="product-detail-footer" />
+      <Footer hideLine={true} hideGallery={true} className="more-delivered-footer" />
     </div>
   );
 }
 
-export default ProductDetail;
+export default MoreDelivered;

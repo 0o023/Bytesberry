@@ -1,0 +1,97 @@
+/*
+
+.BarahTableContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .InputContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .InputWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 10px;
+  }
+  
+  .InputBox {
+    padding: 5px;
+    border: 1px solid #A1C398;
+    border-radius: 4px;
+  }
+  
+  .InputError {
+    border-color: red;
+  }
+  
+  .AddButton {
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px; 
+  }
+  
+  .AddButton:hover {
+    background-color: #45a049;
+  }
+  
+  .Error {
+    color: red;
+    margin-top: 5px;
+    margin-bottom: 0;
+  }
+  
+  .TableWrapper {
+    width: 100%;
+    height: 60%;
+    overflow-y: auto;
+    overflow-x: auto;
+  }
+  
+  .BarahTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .TableHeader {
+    background-color: #79aa6f;
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .EvenRow {
+    background-color: #e4e4cb;
+    color: black;
+  }
+  
+  .OddRow {
+    background-color: #eaf0d4;
+    color: black;
+  }
+  
+  .ActionButton {
+    padding: 5px 10px;
+    background-color: #0967c5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .ActionButton:hover {
+    background-color: #3aabe0;
+  }
+  */
+  

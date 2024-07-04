@@ -110,22 +110,98 @@ const {Validation} = require("../schemas/orders.schema");
 
 
 async function insertOrders(req, res) {
-    try {
-        const { error,value } = Validation.validate(req.body);
-        if(error){
-            return res.status(400).json({error: error.details[0].message});
-        }
-        const {order_date, billing_add, payment_mode, order_status, order_delivered_date, order_no, payment_status, order_total, customer_email, customer_phone_no } = value;
+  try {
+      const { error, value } = Validation.validate(req.body);
+      if (error) {
+          return res.status(400).json({ error: error.details[0].message });
+      }
 
-        const query = 'SELECT insert_order_keys($1, $2, $3, $4, $5, $6,$7,$8,$9,$10)';
-        console.log([order_date, billing_add, payment_mode, order_status, order_delivered_date, order_no, payment_status, order_total, customer_email, customer_phone_no]);
-        const result = await pool.query(query, [order_date, billing_add, payment_mode, order_status, order_delivered_date, order_no, payment_status, order_total, customer_email, customer_phone_no]);
-        res.status(200).json(result.rows);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: 'Database error' });
-    }
+      const { 
+          order_date, billing_add, payment_mode, order_status, 
+          order_delivered_date, order_no, payment_status, order_total, 
+          customer_email, customer_phone_no, product_id, file_id, customer_name 
+      } = value;
+
+      const query = `
+          SELECT public.insert_order_keys(
+              $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
+          )
+      `;
+      
+      console.log('Executing query:', query);
+      console.log('With parameters:', [
+          order_date, billing_add, payment_mode, order_status, 
+          order_delivered_date, order_no, payment_status, order_total, 
+          customer_email, customer_phone_no, product_id, file_id, customer_name
+      ]);
+
+      const result = await pool.query(query, [
+          order_date, billing_add, payment_mode, order_status, 
+          order_delivered_date, order_no, payment_status, order_total, 
+          customer_email, customer_phone_no, product_id, file_id, customer_name
+      ]);
+
+      res.status(200).json(result.rows);
+  } catch (err) {
+      console.error('Error details:', err);
+      res.status(500).json({ error: 'Database error' });
+  }
 };
+
+
+
+async function getAllOrderDetails(req, res) {
+  try {
+      const query = `
+          SELECT * FROM public.get_all_order_details()
+      `;
+      
+      console.log('Executing query:', query);
+
+      const result = await pool.query(query);
+
+      res.status(200).json(result.rows);
+  } catch (err) {
+      console.error('Error details:', err);
+      res.status(500).json({ error: 'Database error' });
+  }
+};
+
+async function getShippingDetails(req, res) {
+  try {
+      const query = `
+          SELECT * FROM public.get_all_shipped_order_details()
+      `;
+      
+      console.log('Executing query:', query);
+
+      const result = await pool.query(query);
+
+      res.status(200).json(result.rows);
+  } catch (err) {
+      console.error('Error details:', err);
+      res.status(500).json({ error: 'Database error' });
+  }
+};
+
+
+async function getDeliveryDetails(req, res) {
+  try {
+      const query = `
+          SELECT * FROM public.get_delivered_orders()
+      `;
+      
+      console.log('Executing query:', query);
+
+      const result = await pool.query(query);
+
+      res.status(200).json(result.rows);
+  } catch (err) {
+      console.error('Error details:', err);
+      res.status(500).json({ error: 'Database error' });
+  }
+};
+
 
 async function deleteOrderAndDetails(req, res) {
   const { order_id } = req.params; // Assuming order_id is passed as a URL parameter
@@ -138,4 +214,19 @@ async function deleteOrderAndDetails(req, res) {
   }
 };
 
-module.exports = { insertOrders, deleteOrderAndDetails };
+
+async function changeStatus(req, res) {
+  const { order_id, order_status } = req.body;
+  
+  try {
+      const query = 'SELECT update_order_status($1, $2)';
+      const values = [order_id, order_status];
+      await pool.query(query, values);
+      res.status(200).json({ message: 'Order status updated successfully' });
+  } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ error: err.message });
+  }
+};
+
+module.exports = { insertOrders, deleteOrderAndDetails, getAllOrderDetails, changeStatus, getDeliveryDetails, getShippingDetails };

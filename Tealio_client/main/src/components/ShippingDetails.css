@@ -1,0 +1,164 @@
+
+/* 
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: Arial, sans-serif;
+  }
+  
+  #root {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .App {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+  
+  
+  .shipping-details-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%; 
+  }
+  
+  .shipping-details-main {
+    display: flex;
+    flex: 1;
+    width: 100%;
+  }
+  
+  .shipping-details-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;                                                 
+    box-sizing: border-box;
+    width: 100%;
+    background-color: #FDF4DC; 
+  }
+  
+  .shipping-details-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .shipping-details-content h1 {
+    font-size: 2em;
+    color: #333;
+  }
+  
+  .shipping-list-heading {
+    font-size: 2em;
+    font-style: normal;
+    font-weight: bold; 
+    margin-bottom: 70px; 
+    color: #333;
+  }
+  
+  .empty-shipping {
+    text-align: center;
+    margin-top: 20px;
+    position: relative;
+  }
+  
+  .cart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    height: auto;
+    margin-top: -100px;
+  }
+  
+  .cart-image {
+    width: 100%;
+    height: auto;
+  }
+  
+  .no-shipping-message {
+    font-size: 1.5em;
+    color: #666;
+    margin-top: 20px;
+  }
+  
+  .shipping-list {
+    width: 100%;
+    margin-top: -30px;
+  }
+  
+  .shipping-item {
+    background-color: #E6F5E1;
+    color: #333; 
+    padding: 15px; 
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box; 
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .shipping-details-page .arrow {
+    position: absolute;
+    right: 100px;
+    display: flex;
+    top: 50%;
+    transform: translateY(-50%);
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .shipping-details-page .arrow svg {
+    width: 30px;
+    height: 30px;
+    color: grey; 
+  }
+  
+  .shipping-image {
+    width: 120px; 
+    margin-right: 100px; 
+  }
+  
+  .shipping-image img {
+    width: 75%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .shipping-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .shipping-details p {
+    margin: 0 0 5px 0;
+    color: #333;
+  }
+  
+ 
+  .shipping-details-footer {
+    width: 100%;
+    padding: 10px 0;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    font-size: 0.8em;
+    margin-top: auto;
+  }
+    */
+  

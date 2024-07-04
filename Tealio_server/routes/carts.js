@@ -1,3 +1,4 @@
+/*
 const { addToCart, getCart, getAllCart, deleteCart } = require('../controllers/cart.controller');
 
 module.exports = function (app) {
@@ -14,3 +15,4 @@ module.exports = function (app) {
     //Define route to delete a row from the table 
     app.delete('/delete_cart/:id', deleteCart);
 };
+*/

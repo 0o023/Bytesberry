@@ -16,9 +16,14 @@ module.exports = function (app) {
 
 */
 
-const { insertOrders, deleteOrderAndDetails } = require('../controllers/orders.controller'); // Correct path to shipped.js
+const { insertOrders, deleteOrderAndDetails, getAllOrderDetails, changeStatus, getDeliveryDetails, getShippingDetails } = require('../controllers/orders.controller'); // Correct path to shipped.js
 
 module.exports = function(app) {
     app.post('/insert_order_keys', insertOrders);
+    app.get('/get_all_order_details', getAllOrderDetails);
+    app.put('/update_order_status', changeStatus);
     app.delete('/delete_orders/:order_id',deleteOrderAndDetails);
+    app.get('/get_delivered_orders', getDeliveryDetails);
+    app.get('/get_all_shipped_order_details', getShippingDetails);
+
 };

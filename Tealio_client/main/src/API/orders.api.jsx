@@ -1,3 +1,4 @@
+/*
 import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/place_order'; // Adjust the URL according to your backend server
@@ -13,3 +14,4 @@ export const getOrders = async () => {
 export const deleteOrders = async (orderId) => {
   return await axios.delete(`${API_URL}/${orderId}`);
 };
+*/

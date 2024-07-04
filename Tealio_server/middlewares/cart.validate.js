@@ -1,3 +1,4 @@
+/*
 const validate = (schema) => {
     return (req, res, next) => {
       const { error } = schema.validate(req.body);
@@ -8,7 +9,7 @@ const validate = (schema) => {
     };
   };
   
-  /*
+  
   const validateParams = (schema) => {
     return (req, res, next) => {
     
@@ -23,7 +24,7 @@ const validate = (schema) => {
       next();
     };
   };
-  */
+  
 
   const validateParams = (schema) => {
     return (req, res, next) => {
@@ -41,3 +42,4 @@ const validate = (schema) => {
     validateParams,
   };
   
+  */

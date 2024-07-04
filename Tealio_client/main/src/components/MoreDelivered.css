@@ -1,0 +1,128 @@
+.more-delivered-page {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.more-delivered-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the start */
+    padding: 40px;
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: -10px; /* Adjust as needed */
+    color: #244d19;
+}
+
+.delivered-info {
+    background-color: #E6F5E1;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2px;
+    width: 100%; /* Make the container full width */
+    color: #244d19; /* Ensure the text is green */
+    text-align: left; /* Align text to the left */
+    font-size: 18px;
+}
+
+.delivered-details-table {
+    width: 100%; /* Make the table full width */
+    background-color: #E6F5E1;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.customer-details-table {
+    width: 100%; /* Make the table full width */
+    background-color: #E6F5E1;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 30px;
+    font-size: 18px;
+    color: #244d19;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 18px; /* Increase font size for table headers and data */
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+td {
+    background-color: #ffffff;
+}
+
+.delivered-details-cell, .customer-details-cell {
+    display: flex;
+    flex-direction: column;
+}
+
+.delivered-details-cell img {
+    width: 90px;
+    height: auto;
+    margin-right: 10px;
+    margin-bottom: 10px; /* Add margin-bottom to increase spacing */
+}
+
+.delivered-details-cell div {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-image {
+    width: 70px;
+    height: auto;
+    border-radius: 8px;
+    margin-right: 50px;
+}
+
+.delivered-details-cell p {
+    font-size: 18px; /* Adjust the size as needed */
+    color: #244d19;
+}
+
+.customer-details-cell p {
+    font-size: 17px; /* Adjust the size as needed */
+    color: #244d19;
+    margin: 5px 0; /* Adjust the value as needed */
+}
+
+.phone-details, .billing-details {
+    display: flex;
+    align-items: center;
+}
+
+.phone-icon, .address-icon {
+    width: 30px; /* Adjust size as needed */
+    height: auto;
+    margin-right: 5px;
+}
+
+.more-delivered-footer {
+    width: 100%;
+    padding: 10px 0;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    font-size: 0.8em;
+    margin-top: auto;
+}

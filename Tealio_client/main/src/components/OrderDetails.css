@@ -1,4 +1,5 @@
-/* OrderDetails.css */
+/*
+
 
 html, body {
   margin: 0;
@@ -6,7 +7,7 @@ html, body {
   width: 100%;
   height: 100%;
   font-family: Arial, sans-serif;
-  overflow: hidden; /* Prevent default scrolling on body */
+  
 }
 
 #root {
@@ -19,7 +20,7 @@ html, body {
   flex-direction: column;
   width: 100%;
   height: 100%;
-  overflow-y: auto; /* Enable vertical scrolling */ 
+  
 }
 
 .order-details-container {
@@ -27,11 +28,11 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px;                                                   /* Can change padding for width of the container */
+  padding: 40px;                                                 
   box-sizing: border-box;
-  width: 100%; /* Ensure the container takes full width */
-  margin-top: 70px; /* Move the container up */
-  background-color: #FDF4DC; /* Warm white background color */
+  width: 100%;
+  margin-top: 500px;                 
+  background-color: #FDF4DC; 
 }
 
 .order-details-content {
@@ -49,8 +50,8 @@ html, body {
 .order-list-heading {
   font-size: 2em;
   font-style: normal;
-  font-weight: bold; /* Make the Order List heading bold */
-  margin-bottom: 70px; /* Adjust margin to separate the heading from the container */           /* changes made */
+  font-weight: bold; 
+  margin-bottom: 70px; 
   color: #333;
 }
 
@@ -63,10 +64,10 @@ html, body {
 .cart {
   display: flex;
   justify-content: center;
-  align-items: center;
-  width: 400px; /* Adjust the size as needed */
+  align-items: center
+  width: 400px;
   height: auto;
-  margin-top: -100px; /* Center horizontally */
+  margin-top: -100px;
 }
 
 .cart-image {
@@ -76,41 +77,41 @@ html, body {
 
 .falling-items {
   position: absolute;
-  top: -100px; /* Start further above the container */
+  top: -100px;
   left: 40%;
   transform: translateX(-50%);
   width: 100%;
   height: 100%;
-  pointer-events: none; /* Make sure clicks pass through the items */
+  pointer-events: none; 
 }
 
 .item {
   position: absolute;
-  top: -300px; /* Start further above the container */
+  top: -300px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 3em; /* Increase size of the items */
-  animation: fall 3s infinite; /* Increase duration for slower fall */
+  font-size: 3em; 
+  animation: fall 3s infinite;
 }
 
 .item:nth-child(2) {
-  animation-delay: 1s; /* Increase delay */
+  animation-delay: 1s; 
 }
 
 .item:nth-child(3) {
-  animation-delay: 2s; /* Increase delay */
+  animation-delay: 2s;
 }
 
 .item:nth-child(4) {
-  animation-delay: 3s; /* Increase delay */
+  animation-delay: 3s;
 }
 
 @keyframes fall {
   0% {
-    transform: translate(-100%, -500px); /* Start further above */
+    transform: translate(-100%, -500px); 
   }
   100% {
-    transform: translate(-50%, 400px); /* Adjust distance to fall into the cart */
+    transform: translate(-50%, 400px);
   }
 }
 
@@ -122,33 +123,33 @@ html, body {
 
 .order-list {
   width: 100%;
-  margin-top: -30px; /* Adjust margin to move up the order list */                       /* changes made  */
+  margin-top: -30px
 }
 
 .order-item {
-  background-color: #E6F5E1; /* Very light and subtle green background */
-  color: #333; /* Dark text color */
-  padding: 15px; /* Adjust padding to make the container more compact */
+  background-color: #E6F5E1;
+  color: #333; 
+  padding: 15px; 
   margin-bottom: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
-  align-items: center; /* Align items to the center */
-  width: 100%; /* Full width */
-  box-sizing: border-box; /* Include padding and border in the element's total width and height */
-  cursor: pointer; /* Make the container clickable */
-  position: relative; /* Ensure positioning context for the arrow */
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box; 
+  cursor: pointer;
+  position: relative;
 }
+  */
 
 
-
-
+/*
 .order-details-page .arrow {
-  position: absolute; /* Position the arrow absolutely within the container */
-  right: 100px; /* Adjust the right position manually as needed */                          /* changes made */
+  position: absolute;
+  right: 100px;
   display: flex;
   top: 50%;
-  transform: translateY(-50%); /* Vertically center the arrow */
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -159,12 +160,12 @@ html, body {
 .order-details-page .arrow svg {
   width: 30px;
   height: 30px;
-  color: grey; /* Adjust arrow color */
+  color: grey; 
 }
 
 .order-image {
-  width: 120px; /* Fixed width for the image container */
-  margin-right: 100px; /* Set margin-right to bring it closer to the text */                 /* changes made */
+  width: 120px; 
+  margin-right: 100px; 
 }
 
 .order-image img {
@@ -177,29 +178,31 @@ html, body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Ensure all items start from the same point */
+  align-items: flex-start;
 }
 
 .order-details p {
-  margin: 0 0 5px 0; /* Remove side margins and reduce bottom margin */
-  color: #333; /* Ensure the text is dark */
+  margin: 0 0 5px 0;
+  color: #333;
 }
 
 .product-name {
-  font-size: 1.5em ; /* Increase the size of the product names */
-  font-style: normal ; /* Italicize the product names */
+  font-size: 1.5em ;
+  font-style: normal ;
 }
 
 
-/* Footer */
+
 .order-details-footer {
   width: 100%;
-  padding: 2px 5px; /* Reduce padding to make footer smaller */
+  padding: 2px 5px; 
   background-color: #333;
   color: white;
   text-align: center;
   box-sizing: border-box;
-  font-size: 0.7em; /* Reduce font size to make footer text smaller */
-  position: relative; /* Make the footer part of the scrolling content */
-  margin-top: auto; /* Push footer to the bottom of the page */
+  font-size: 0.7em;
+  position: relative;
+  margin-top: auto;
 }
+
+*/

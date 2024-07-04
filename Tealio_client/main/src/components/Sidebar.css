@@ -1,0 +1,69 @@
+/* Sidebar Styles */
+.sidebar {
+    background-color: #fefded; /* Updated background color for sidebar */
+    color: #333; /* Adjust text color if necessary */
+    width: 370px; /* Adjust width if necessary */
+    min-height: 100vh; /* Ensure full height */
+    padding: 16px;
+    box-sizing: border-box;
+  }
+  
+  .sidebar-header {
+    background-color: #F2F3F4; /* Update this color if needed */
+    width: 100%;
+    padding: 16px;
+    margin-bottom: 18px;
+  }
+  
+  .sidebar-title {
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .sidebar-menu {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 35px;
+  }
+  
+  .sidebar-item, .sidebar-subitem {
+    display: flex;
+    align-items: center;
+    margin-bottom: 22px;
+  }
+  
+  .sidebar-icon {
+    width: 25px; /* Adjust the width */
+    height: 25px; /* Adjust the height */
+    margin-right: 8px;
+  }
+  
+  .sidebar-icon-large {
+    width: 25px; /* Adjust the width for large icon */
+    height: 25px; /* Adjust the height for large icon */
+  }
+  
+  .sidebar-link, .sidebar-sublink {
+    text-decoration: none;
+    color: #333;
+    font-size: 21px;
+  }
+  
+  .sidebar-link:hover, .sidebar-sublink:hover {
+    text-decoration: underline;
+  }
+  
+  .sidebar-dropdown-icon {
+    margin-left: 8px;
+    width: 16px;
+    height: 16px;
+  }
+  
+  .sidebar-submenu {
+    margin-left: 16px;
+  }
+  
+  .sidebar-subitem:first-of-type {
+    margin-top: 60px; /* Adjust the spacing value as needed */
+  }
+  

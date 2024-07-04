@@ -5,7 +5,7 @@ import Navbar from './navbar'; // Ensure the path is correct
 import Footer from './footer'; // Ensure the path is correct
 import Sidebar from './Sidebar'; // Ensure the path is correct
 
-function OrderDetails() {
+function ShippingDetails() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,10 +13,10 @@ function OrderDetails() {
   useEffect(() => {
     async function fetchOrders() {
       try {
-        const response = await axios.get('http://localhost:5000/get_all_order_details'); // Use the correct URL and port
+        const response = await axios.get('http://localhost:5000/get_all_shipped_order_details'); // Use the correct URL and port
         const data = Array.isArray(response.data) ? response.data : [];
         console.log('API response:', data); // Debug log
-        setOrders(data);        // Update the orders state 
+        setOrders(data); // Update the orders state
       } catch (err) {
         console.error('Error fetching orders:', err);
         setError('Error fetching orders');
@@ -33,49 +33,6 @@ function OrderDetails() {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
-
-
-  //Event Handlers 
-  const handleInsertTrackingInfo = async (orderId) => {
-    try {
-      console.log(`Inserting tracking info for order ${orderId}`);
-      const response = await axios.post('http://localhost:5000/insert_order_tracking', {
-        order_id: orderId,
-        awb_tracking_no: null // or any appropriate default value
-      });
-      if (response.status === 200) {
-        console.log(`Tracking info for order ${orderId} inserted successfully`);
-      } else {
-        console.error('Failed to insert tracking info', response);
-      }
-    } catch (err) {
-      console.error('Error inserting tracking info:', err);
-    }
-  };
-
-  const handleMarkAsShipped = async (orderId) => {
-    try {
-      console.log(`Marking order ${orderId} as shipped`);
-      const response = await axios.put('http://localhost:5000/update_order_status', {
-        order_id: orderId,
-        order_status: 'shipped'
-      });
-      if (response.status === 200) {
-        // Remove the shipped order from the local state
-        setOrders((prevOrders) =>
-          prevOrders.filter((order) => order.order_id !== orderId)
-        );
-        console.log(`Order ${orderId} marked as shipped`);
-        // Call the function to insert tracking info
-        await handleInsertTrackingInfo(orderId);
-      } else {
-        console.error('Failed to update order status', response);
-      }
-    } catch (err) {
-      console.error('Error updating order status:', err);
-    }
-  };
-  
 
   // returns a JSX structure 
   return (
@@ -97,23 +54,17 @@ function OrderDetails() {
                     alt="Empty Cart" 
                     className="w-full h-auto" 
                   />
-                  <div className="falling-items">
-                    <div className="item">🎁</div>
-                    <div className="item">🛍️</div>
-                    <div className="item">🎁</div>
-                    <div className="item">🛍️</div>
-                  </div>
                 </div>
                 <h1 className="text-[1.5em] text-black text-[#666] mt-5">
-                  Looks like you have no orders yet !! <span role="img" aria-label="sad face">😞</span>
+                  No shipped items yet!
                 </h1>
               </div>
             ) : (
               <>
-                <h1 className="text-4xl font-bold mb-2 text-[#333] mt-0 -mt-7">Order Details</h1>
+                <h1 className="text-4xl font-bold mb-2 text-[#333] mt-0 -mt-7">Shipping Details</h1>
                 <div className="w-full mt-[10px]"> 
                   {orders.map((order, index) => (
-                    <Link to={`/order-details/${order.order_id}`} key={index} className="no-underline">
+                    <Link to={`/more-shipping/${order.order_id}`} key={index} className="no-underline">
                       <div 
                         className="bg-light-green text-black p-4 mb-5 rounded-md shadow-sm flex items-center w-full box-border cursor-pointer relative no-underline hover:no-underline focus:no-underline"
                         style={{ color: 'black', border: '2px ', boxShadow: '0 2px 3px #A1C398' }}
@@ -127,16 +78,6 @@ function OrderDetails() {
                           <p className="text-lg">Customer Name: {order.customer_name}</p>
                           <p className="text-lg">Order amount: {order.order_total}, Order Status: {order.order_status}</p>
                           <p className="text-lg">Payment Status: {order.payment_status}, Payment mode: {order.payment_mode}</p>
-                          <button 
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handleMarkAsShipped(order.order_id);
-                            }} 
-                            className="mt-2 py-1 px-2 rounded text-lg border border-white box-border hover:bg-hvdarkgreen"
-                            style={{ backgroundColor: '#A1C398', color: 'white', boxShadow: '0 0 0 1px black' }}
-                          >
-                            Mark as Shipped
-                          </button>
                         </div>
                         <div className="absolute right-20 top-1/2 transform translate-y-[-50%] flex items-center justify-center">
                           <svg
@@ -163,4 +104,4 @@ function OrderDetails() {
   );
 }
 
-export default OrderDetails;
+export default ShippingDetails;

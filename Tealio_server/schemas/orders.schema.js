@@ -29,7 +29,10 @@ const Validation = Joi.object({
     payment_status: Joi.string().required(),
     order_total: Joi.number().required(),
     customer_email: Joi.string().required(),
-    customer_phone_no: Joi.number().required()
+    customer_phone_no: Joi.number().required(),
+    product_id: Joi.number().required(),
+    file_id: Joi.number().required(),
+    customer_name: Joi.string().required(),
 });
 
 module.exports = {

@@ -1,3 +1,4 @@
+/*
 const pool = require('../db');
 const { addToCartSchema, getCartSchema, deleteCartSchema, } = require ('../schemas/carts.db');
 const { validate, validateParams } = require('../middlewares/cart.validate');
@@ -100,3 +101,4 @@ const getAllCart = async (req, res) => {
     getAllCart,
     deleteCart: [validateParams(deleteCartSchema), deleteCart],
   };
+  */
