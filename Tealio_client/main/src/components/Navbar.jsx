@@ -29,6 +29,7 @@ const Navbar = () => {
                     alt="Tealio Logo"
                     className={`transition-all duration-500 ${isShrunk ? 'h-12' : 'h-20'}`} 
                 />
+                <Link to="/admin-login" className="ml-4 text-white">Login</Link>
             </div>
             <ul className="flex space-x-4">
                 <li><Link to="/" className="text-white">Home</Link></li>

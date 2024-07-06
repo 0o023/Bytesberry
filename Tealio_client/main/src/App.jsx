@@ -1,7 +1,6 @@
-// src/App.jsx
 import React, { useEffect, useRef, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import Navbar from './components/Navbar'; // Existing Navbar component
 import Footer from './components/Footer';
 import Hero from './components/heroPage';
 import SideCart from './components/cart';
@@ -9,16 +8,20 @@ import { CartProvider, useCart } from './components/CartContext';
 import TermsOfService from './components/TermsOfService';
 import ContactInfo from './components/ContactInfo';
 import ShippingPolicy from './components/ShippingPolicy';
+import PrivacyPolicy from './components/PrivacyPolicy';
 import RefundPolicy from './components/RefundPolicy';
 import Checkout from './components/Checkout';
 import OrderSummary from './components/OrderSummary';
 import TrackOrder from './components/TrackOrder';
+import AdminHome from './components/AdminHome'; // Import AdminHome component
+import AdminLogin from './components/AdminLogin';
+import AdminNavbar from './components/AdminNavbar'; // Import AdminNavbar component
+ // Import OrderDetails component
 
 function App() {
   return (
     <CartProvider>
       <Router>
-      
         <MainContent />
         <CartWrapper />
       </Router>
@@ -28,13 +31,8 @@ function App() {
 
 const MainContent = () => {
   const [totalAmount, setTotalAmount] = useState(0);
-
-  const calculateTotal = (cartItems) => {
-    const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    setTotalAmount(total);
-  };
-
   const { cartOpen } = useCart();
+  const location = useLocation();
 
   useEffect(() => {
     if (cartOpen) {
@@ -44,23 +42,36 @@ const MainContent = () => {
     }
   }, [cartOpen]);
 
+  // Function to determine if footer should be displayed
+  const shouldDisplayFooter = () => {
+    // Check if the current path is not /admin-home
+    return !location.pathname.includes('/admin-home');
+  };
+
   return (
     <div className="relative min-h-screen flex flex-col">
       <BlurWrapper>
-        <Navbar />
+        {location.pathname.includes('/admin') ? <AdminNavbar /> : <Navbar />}
         <div className="pt-20">
           <Routes>
             <Route path="/" element={<Hero />} />
             <Route path="/checkout" element={<Checkout totalAmount={totalAmount} />} />
             <Route path="/order-summary" element={<OrderSummary />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/contact-info" element={<ContactInfo />} />
             <Route path="/shipping-policy" element={<ShippingPolicy />} />
             <Route path="/refund-policy" element={<RefundPolicy />} />
             <Route path="/track-order" element={<TrackOrder />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/admin-home" element={<AdminHome />} />
+            
+            <Route path="/forgot-password">
+              {/* Add your Forgot Password component here */}
+            </Route>
           </Routes>
         </div>
-        <Footer />
+        {shouldDisplayFooter() && <Footer />}
       </BlurWrapper>
     </div>
   );
