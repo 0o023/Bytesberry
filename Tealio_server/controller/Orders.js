@@ -67,19 +67,7 @@ async function insertOrders(req, res) {
 
         // Step 1: Insert the order into utbl_order_keys
         const insertOrderQuery = `
-            INSERT INTO utbl_order_keys (
-                order_date,
-                billing_add,
-                payment_mode,
-                order_status,
-                order_delivered_date,
-                order_no,
-                payment_status,
-                order_total,
-                customer_email,
-                customer_phone_no
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-            RETURNING order_id;
+            SELECT insert_order($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) AS order_id;
         `;
         
         const orderValues = [
