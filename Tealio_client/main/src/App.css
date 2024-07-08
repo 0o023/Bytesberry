@@ -61,6 +61,36 @@ button {
   color: green;
   font-weight: bold;
 }
+.Modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  margin: auto;
+  outline: none;
+}
+
+.Overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  margin: 5px;
+}
+
+.main-content {
+  margin-left: 370px; /* Match the sidebar width */
+  padding: 16px; /* Add padding for better spacing */
+}
+
 
 button:hover {
   background-color: #A1C398; /* Darker shade for hover effect */

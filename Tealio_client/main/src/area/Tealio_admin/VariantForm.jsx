@@ -1,17 +1,33 @@
-// src/area/Tealio_admin/VariantForm.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
-const VariantForm = ({ products, addVariant, updateVariant }) => {
+const VariantForm = ({ addVariant, updateVariant }) => {
+  const [products, setProducts] = useState([]);
   const [productId, setProductId] = useState('');
   const [variantName, setVariantName] = useState('');
+  const [productName, setProductName] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
   const { productId: paramProductId, variantName: paramVariantName } = useParams();
 
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/product_generic_details');
+        setProducts(response.data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        toast.error('Error fetching products.');
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
     if (paramProductId && paramVariantName) {
-      // Find the variant to edit
       const existingVariant = products
         .flatMap((product) => product.variants || [])
         .find((variant) => variant.productId === paramProductId && variant.name === paramVariantName);
@@ -19,32 +35,59 @@ const VariantForm = ({ products, addVariant, updateVariant }) => {
       if (existingVariant) {
         setProductId(existingVariant.productId);
         setVariantName(existingVariant.name);
+        const selectedProduct = products.find(product => product.product_id === existingVariant.productId);
+        setProductName(selectedProduct ? selectedProduct.product_name : 'Unknown Product');
       }
     }
   }, [paramProductId, paramVariantName, products]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!productId || !variantName) {
-      alert('Please fill in all fields.');
+      toast.error('Please fill in all fields.');
       return;
     }
 
-    const variant = { productId, name: variantName };
+    const variant = {
+      product_id: productId,
+      size_name: variantName
+    };
 
-    if (paramProductId && paramVariantName) {
-      updateVariant(variant);
-      setSuccessMessage('Variant successfully updated!');
-    } else {
-      addVariant(variant);
-      setSuccessMessage('Variant successfully added!');
+    console.log('Submitting variant:', variant); // Debug: log the variant being submitted
+
+    try {
+      if (paramProductId && paramVariantName) {
+        await axios.put(`http://localhost:3000/product_variety_size/${paramProductId}`, variant, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        updateVariant(variant);
+        setSuccessMessage('Variant successfully updated!');
+        toast.success('Variant successfully updated!');
+      } else {
+        await axios.post('http://localhost:3000/product_variety_size', variant, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        addVariant(variant);
+        setSuccessMessage('Variant successfully added!');
+        toast.success('Variant successfully added!');
+      }
+    } catch (error) {
+      console.error('Error saving the variant:', error);
+      toast.error('Error saving the variant.');
     }
 
-    // Clear success message and redirect back
     setTimeout(() => {
       setSuccessMessage('');
-      navigate('/variants'); // Redirect back to ProductVariants page
+      navigate('/variants');
     }, 3000);
+  };
+
+  const handleProductChange = (e) => {
+    const selectedProductId = e.target.value;
+    setProductId(selectedProductId);
+    const selectedProduct = products.find(product => product.product_id === selectedProductId);
+    setProductName(selectedProduct ? selectedProduct.product_name : 'Unknown Product');
   };
 
   return (
@@ -53,12 +96,12 @@ const VariantForm = ({ products, addVariant, updateVariant }) => {
       <form onSubmit={handleSubmit}>
         <select
           value={productId}
-          onChange={(e) => setProductId(e.target.value)}
+          onChange={handleProductChange}
         >
           <option value="" disabled>Select Product</option>
           {products.map((product) => (
-            <option key={product.id} value={product.id}>
-              {product.name}
+            <option key={product.product_id} value={product.product_id}>
+              {product.product_name}
             </option>
           ))}
         </select>

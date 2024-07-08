@@ -1,21 +1,20 @@
-// src/App.jsx
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import Sidebar from './area/Tealio_admin/Sidebar';
 import Home from './area/Tealio_admin/Home';
 import ProductDetails from './area/Tealio_admin/ProductDetails';
 import ProductDetailsForm from './area/Tealio_admin/ProductDetailsForm';
 import ProductInventory from './area/Tealio_admin/ProductInventory';
 import ProductVariants from './area/Tealio_admin/ProductVariants';
 import ProductPrice from './area/Tealio_admin/ProductPrice';
-import VariantForm from './area/Tealio_admin/VariantForm'; // Import for variant form
+import VariantForm from './area/Tealio_admin/VariantForm';
+import './App.css';
 
 const App = () => {
   const [products, setProducts] = useState([]);
   const [variants, setVariants] = useState([]);
   const [prices, setPrices] = useState([]);
 
-  // Functions to manage products
   const addProduct = (product) => {
     setProducts([...products, product]);
   };
@@ -30,7 +29,6 @@ const App = () => {
     setProducts(products.filter((product) => product.id !== productId));
   };
 
-  // Functions to manage variants
   const addVariant = (variant) => {
     setVariants([...variants, variant]);
   };
@@ -49,32 +47,33 @@ const App = () => {
     ));
   };
 
-  // Functions to manage prices
   const addPrice = (priceData) => {
     setPrices([...prices, priceData]);
   };
 
+  const ProductDetailsWithNavigate = (props) => {
+    const navigate = useNavigate();
+    return (
+      <ProductDetails
+        {...props}
+        onEdit={(id) => navigate(`/details/edit/${id}`)}
+        onDelete={deleteProduct}
+      />
+    );
+  };
+
   return (
-    <Router>
+
       <div className="App">
-        <h1>Tealio Admin Dashboard</h1>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/details">Product Details</Link>
-          <Link to="/inventory">Product Inventory</Link>
-          <Link to="/variants">Product Variants</Link>
-          <Link to="/price">Product Price</Link>
-        </nav>
-        <div className="content">
+        <Sidebar />
+        <div className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route
               path="/details"
               element={
-                <ProductDetails
+                <ProductDetailsWithNavigate
                   products={products}
-                  onEdit={(id) => navigate(`/details/edit/${id}`)}
-                  onDelete={deleteProduct}
                 />
               }
             />
@@ -92,9 +91,9 @@ const App = () => {
                 />
               }
             />
-           <Route
+            <Route
               path="/inventory"
-              element={<ProductInventory />}
+              element={<ProductInventory products={products} />}
             />
             <Route
               path="/variants"
@@ -102,7 +101,6 @@ const App = () => {
                 <ProductVariants
                   products={products}
                   variants={variants}
-                  editVariant={updateVariant}
                   deleteVariant={deleteVariant}
                 />
               }
@@ -129,10 +127,10 @@ const App = () => {
               path="/price"
               element={<ProductPrice />}
             />
-          </Routes> 
+          </Routes>
         </div>
       </div>
-    </Router>
+
   );
 };
 

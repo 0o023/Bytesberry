@@ -1,8 +1,63 @@
-// src/area/Tealio_admin/ProductDetails.js
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import Modal from 'react-modal';
 
-const ProductDetails = ({ products, onEdit, onDelete }) => {
+Modal.setAppElement('#root'); // Accessibility feature for modal
+
+const ProductDetails = () => {
+  const [products, setProducts] = useState([]); // Correctly initialized state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/product_generic_details');
+        if (response.data) {
+          setProducts(response.data); // Correctly updating state
+        } else {
+          toast.error('Failed to fetch products.');
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error.response ? error.response.data : error.message);
+        toast.error('Error fetching products.');
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleEdit = (id) => {
+    navigate(`/details/edit/${id}`);
+  };
+
+  const handleDelete = async () => {
+    if (productToDelete) {
+      try {
+        await axios.delete(`http://localhost:3000/product_generic_details/${productToDelete}`);
+        setProducts((prevProducts) => prevProducts.filter(product => product.product_id !== productToDelete));
+        toast.success('Product deleted successfully.');
+      } catch (error) {
+        console.error('Error deleting product:', error.response ? error.response.data : error.message);
+        toast.error('Error deleting product.');
+      }
+      setIsModalOpen(false);
+    }
+  };
+
+  const openModal = (id) => {
+    setProductToDelete(id);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setProductToDelete(null);
+  };
+
   return (
     <div>
       <h2>Product Details</h2>
@@ -19,21 +74,38 @@ const ProductDetails = ({ products, onEdit, onDelete }) => {
           </tr>
         </thead>
         <tbody>
-          {products.map((product, index) => (
-            <tr key={product.id}>
-              <td>{index + 1}</td>
-              <td>{product.name}</td>
-              <td>{product.description}</td>
-              <td>
-                <Link to={`/details/edit/${product.id}`}>
-                  <button>Edit</button>
-                </Link>
-                <button onClick={() => onDelete(product.id)}>Delete</button>
-              </td>
+          {products.length === 0 ? (
+            <tr>
+              <td colSpan="4">No products available</td>
             </tr>
-          ))}
+          ) : (
+            products.map((product, index) => (
+              <tr key={product.product_id}>
+                <td>{index + 1}</td>
+                <td>{product.product_name}</td>
+                <td>{product.product_discription}</td>
+                <td>
+                  <button onClick={() => handleEdit(product.product_id)}>Edit</button>
+                  <button onClick={() => openModal(product.product_id)}>Delete</button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
+
+      {/* Confirmation Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Confirm Delete"
+        className="Modal"
+        overlayClassName="Overlay"
+      >
+        <h2>Are you sure you want to delete this product?</h2>
+        <button onClick={handleDelete}>Yes, Delete</button>
+        <button onClick={closeModal}>Cancel</button>
+      </Modal>
     </div>
   );
 };

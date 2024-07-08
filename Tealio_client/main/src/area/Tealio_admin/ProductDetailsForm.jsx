@@ -1,157 +1,189 @@
-// src/area/Tealio_admin/ProductDetailsForm.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
+import imageCompression from 'browser-image-compression';
 
 // Helper function to convert files to base64
 const convertToBase64 = (file) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
+    reader.onloadend = () => {
+      resolve(reader.result);
+    };
+    reader.onerror = (error) => {
+      reject(error);
+    };
     reader.readAsDataURL(file);
   });
 };
 
-const ProductDetailsForm = ({ products, addProduct, updateProduct }) => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [images, setImages] = useState([]);
-  const [existingImages, setExistingImages] = useState([]); // For preserving existing images
+const ProductDetailsForm = ({ addProduct, updateProduct }) => {
+  const [product_name, setProductName] = useState('');
+  const [product_discription, setProductDiscription] = useState('');
+  const [product_images, setProductImages] = useState([]);
+  const [existingImages, setExistingImages] = useState([]);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [fileMessage, setFileMessage] = useState('');
   const navigate = useNavigate();
   const { id } = useParams(); // Get the product ID from the URL
 
   useEffect(() => {
     if (id) {
-      // Find the product to edit
-      const product = products.find(product => product.id === id);
-      if (product) {
-        setName(product.name);
-        setDescription(product.description);
-        setExistingImages(product.images || []); // Set existing images
-      }
+      const fetchProduct = async () => {
+        try {
+          const response = await axios.get(`http://localhost:3000/product_generic_details/${id}`);
+          const product = response.data;
+
+          // Check if existingImages contain valid base64 data
+          console.log('Existing Images:', product.product_images);
+
+          setProductName(product.product_name);
+          setProductDiscription(product.product_discription);
+          setExistingImages(product.product_images || []);
+        } catch (error) {
+          console.error('Error fetching product details:', error);
+          setErrorMessage('Error fetching product details.');
+        }
+      };
+      fetchProduct();
     }
-  }, [id, products]);
+  }, [id]);
 
   const handleFileChange = async (e) => {
-    if (id) return; // Prevent adding new images if editing
-
     const files = e.target.files;
-    setErrorMessage('');
-    
-    const imagePromises = Array.from(files).map(file => {
-      if (file.type.startsWith('image/')) {
-        return convertToBase64(file);
-      } else {
-        setErrorMessage('Only image files are allowed.');
-        return Promise.reject('Invalid file type');
+    const imagePromises = Array.from(files).map(async (file) => {
+      try {
+        const compressedFile = await imageCompression(file, {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 1920,
+          useWebWorker: true,
+        });
+
+        const base64 = await convertToBase64(compressedFile);
+        setFileMessage('File converted to base64 successfully.');
+        return base64; // Directly return base64 string
+      } catch (error) {
+        setFileMessage('Error processing file.');
+        throw new Error('Error processing file');
       }
     });
 
     try {
-      const base64Images = await Promise.all(imagePromises);
-      setImages(base64Images);
+      const images = await Promise.all(imagePromises);
+      setProductImages(prevImages => [...prevImages, ...images]); // Append new images
     } catch (error) {
-      console.error("Error converting files to Base64:", error);
-      setErrorMessage('Error converting images to Base64.');
+      setErrorMessage('Error processing images');
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleDeleteImage = (index, existing) => {
+    if (existing) {
+      const updatedImages = existingImages.filter((_, imgIndex) => imgIndex !== index);
+      setExistingImages(updatedImages);
+      // Optionally, send a request to the backend to delete the image
+    } else {
+      const updatedImages = product_images.filter((_, imgIndex) => imgIndex !== index);
+      setProductImages(updatedImages);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !description) {
+    if (!product_name || !product_discription) {
       alert('Please fill in all fields.');
       return;
     }
 
     const product = {
-      id: id || Date.now().toString(), // Use existing ID if editing
-      name,
-      description,
-      images: id ? existingImages : images, // Preserve existing images when editing
+      product_name,
+      product_discription,
+      product_images: id ? existingImages.concat(product_images) : product_images, // Only include existingImages if editing
     };
 
-    if (id) {
-      updateProduct(product); // Update existing product
-    } else {
-      addProduct(product); // Add new product
+    try {
+      if (id) {
+        await axios.put(`http://localhost:3000/product_generic_details/${id}`, product, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        setSuccessMessage('Product updated successfully!');
+        updateProduct(product);
+      } else {
+        await axios.post('http://localhost:3000/product_generic_details', product, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        setSuccessMessage('Product added successfully!');
+        addProduct(product);
+      }
+    } catch (error) {
+      setErrorMessage('Error saving the product.');
     }
 
-    setName('');
-    setDescription('');
-    setImages([]);
-    setSuccessMessage('Product has been saved successfully!');
     setTimeout(() => {
       setSuccessMessage('');
+      setErrorMessage('');
       navigate('/details');
-    }, 2000); // Redirect after 2 seconds
+    }, 2000);
   };
 
   return (
-    <div className="content">
-      <h2>{id ? 'Edit Product' : 'Add Product'}</h2>
+    <div>
+      <h2>{id ? 'Edit' : 'Add'} Product</h2>
+      {successMessage && <p>{successMessage}</p>}
+      {errorMessage && <p>{errorMessage}</p>}
+      {fileMessage && <p>{fileMessage}</p>}
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          required
-        />
-        {!id && ( // Show file input only if adding a new product
+        <div>
+          <label>Name:</label>
+          <input
+            type="text"
+            value={product_name}
+            onChange={(e) => setProductName(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Description:</label>
+          <input
+            type="text"
+            value={product_discription}
+            onChange={(e) => setProductDiscription(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Images:</label>
           <input
             type="file"
-            accept="image/*"
-            multiple
             onChange={handleFileChange}
+            multiple
+            accept="image/*"
           />
-        )}
-        <button type="submit">{id ? 'Update Product' : 'Add Product'}</button>
+        </div>
+        <button type="submit">{id ? 'Update' : 'Add'} Product</button>
       </form>
-      {images.length > 0 && !id && ( // Only show new images if adding a product
-        <div>
-          <h3>Selected Images:</h3>
-          <div className="image-previews">
-            {images.map((image, index) => (
-              <div key={index} className="image-preview-container">
-                <img
-                  src={image}
-                  alt={`Preview ${index}`}
-                  style={{ width: '100px', marginRight: '10px' }}
-                />
-                <p>{image.substring(0, 30)}...</p>
-              </div>
-            ))}
+      <div>
+        {id && (
+          <>
+            <h3>Existing Images:</h3>
+            {existingImages.length === 0 ? <p>No existing images</p> : (
+              existingImages.map((img, index) => (
+                <div key={index}>
+                  <img src={img} alt={`Existing Image ${index + 1}`} width="100" />
+                  <button onClick={() => handleDeleteImage(index, true)}>Delete</button>
+                </div>
+              ))
+            )}
+          </>
+        )}
+        <h3>New Images:</h3>
+        {product_images.map((img, index) => (
+          <div key={index}>
+            <img src={img} alt={`New Image ${index + 1}`} width="100" />
+            <button onClick={() => handleDeleteImage(index, false)}>Delete</button>
           </div>
-        </div>
-      )}
-      {existingImages.length > 0 && ( // Show existing images if editing
-        <div>
-          <h3>Existing Images:</h3>
-          <div className="image-previews">
-            {existingImages.map((image, index) => (
-              <div key={index} className="image-preview-container">
-                <img
-                  src={image}
-                  alt={`Existing Preview ${index}`}
-                  style={{ width: '100px', marginRight: '10px' }}
-                />
-                <p>{image.substring(0, 30)}...</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      {successMessage && <p>{successMessage}</p>}
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+        ))}
+      </div>
     </div>
   );
 };
