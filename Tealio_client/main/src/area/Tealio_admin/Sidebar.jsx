@@ -84,16 +84,7 @@ const Sidebar = () => {
               Product Details
             </Link>
           </li>
-          <li style={sidebarStyles.item}>
-            <Link 
-              to="/inventory" 
-              style={sidebarStyles.link}
-              onMouseOver={e => e.target.style.textDecoration = sidebarStyles.linkHover.textDecoration}
-              onMouseOut={e => e.target.style.textDecoration = 'none'}
-            >
-              Product Inventory
-            </Link>
-          </li>
+          
           <li style={sidebarStyles.item}>
             <Link 
               to="/variants" 
@@ -102,6 +93,16 @@ const Sidebar = () => {
               onMouseOut={e => e.target.style.textDecoration = 'none'}
             >
               Product Variants
+            </Link>
+          </li>
+          <li style={sidebarStyles.item}>
+            <Link 
+              to="/inventory" 
+              style={sidebarStyles.link}
+              onMouseOver={e => e.target.style.textDecoration = sidebarStyles.linkHover.textDecoration}
+              onMouseOut={e => e.target.style.textDecoration = 'none'}
+            >
+              Product Inventory
             </Link>
           </li>
           <li style={sidebarStyles.item}>

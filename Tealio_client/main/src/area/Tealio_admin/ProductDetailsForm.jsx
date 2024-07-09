@@ -35,9 +35,7 @@ const ProductDetailsForm = ({ addProduct, updateProduct }) => {
           const response = await axios.get(`http://localhost:3000/product_generic_details/${id}`);
           const product = response.data;
 
-          // Check if existingImages contain valid base64 data
-          console.log('Existing Images:', product.product_images);
-
+          // Set product details and existing images
           setProductName(product.product_name);
           setProductDiscription(product.product_discription);
           setExistingImages(product.product_images || []);
@@ -77,17 +75,6 @@ const ProductDetailsForm = ({ addProduct, updateProduct }) => {
     }
   };
 
-  const handleDeleteImage = (index, existing) => {
-    if (existing) {
-      const updatedImages = existingImages.filter((_, imgIndex) => imgIndex !== index);
-      setExistingImages(updatedImages);
-      // Optionally, send a request to the backend to delete the image
-    } else {
-      const updatedImages = product_images.filter((_, imgIndex) => imgIndex !== index);
-      setProductImages(updatedImages);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!product_name || !product_discription) {
@@ -117,6 +104,7 @@ const ProductDetailsForm = ({ addProduct, updateProduct }) => {
       }
     } catch (error) {
       setErrorMessage('Error saving the product.');
+      console.error('Submit error:', error);
     }
 
     setTimeout(() => {
@@ -163,24 +151,11 @@ const ProductDetailsForm = ({ addProduct, updateProduct }) => {
         <button type="submit">{id ? 'Update' : 'Add'} Product</button>
       </form>
       <div>
-        {id && (
-          <>
-            <h3>Existing Images:</h3>
-            {existingImages.length === 0 ? <p>No existing images</p> : (
-              existingImages.map((img, index) => (
-                <div key={index}>
-                  <img src={img} alt={`Existing Image ${index + 1}`} width="100" />
-                  <button onClick={() => handleDeleteImage(index, true)}>Delete</button>
-                </div>
-              ))
-            )}
-          </>
-        )}
         <h3>New Images:</h3>
         {product_images.map((img, index) => (
           <div key={index}>
             <img src={img} alt={`New Image ${index + 1}`} width="100" />
-            <button onClick={() => handleDeleteImage(index, false)}>Delete</button>
+            
           </div>
         ))}
       </div>

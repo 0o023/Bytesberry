@@ -1,21 +1,26 @@
-// src/area/Tealio_admin/ProductVariants.js
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
+import Modal from 'react-modal';
+
+Modal.setAppElement('#root'); // Accessibility feature for modal
 
 const ProductVariants = () => {
   const [products, setProducts] = useState([]);
   const [variants, setVariants] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [variantToDelete, setVariantToDelete] = useState(null);
+  const navigate = useNavigate();
 
-  // Fetch products and variants from the API
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://localhost:3000/product_generic_details');
+        console.log('Products fetched:', response.data);
         setProducts(response.data);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching products:', error.response ? error.response.data : error.message);
         toast.error('Error fetching products.');
       }
     };
@@ -23,9 +28,10 @@ const ProductVariants = () => {
     const fetchVariants = async () => {
       try {
         const response = await axios.get('http://localhost:3000/product_variety_size');
+        console.log('Variants fetched:', response.data);
         setVariants(response.data);
       } catch (error) {
-        console.error('Error fetching variants:', error);
+        console.error('Error fetching variants:', error.response ? error.response.data : error.message);
         toast.error('Error fetching variants.');
       }
     };
@@ -34,21 +40,30 @@ const ProductVariants = () => {
     fetchVariants();
   }, []);
 
-  // Handle deletion of a variant
-  const handleDeleteVariant = async (variant) => {
-    if (window.confirm(`Are you sure you want to delete the variant "${variant.name}"?`)) {
+  const handleDelete = async () => {
+    if (variantToDelete) {
       try {
-        await axios.delete(`http://localhost:3000/product_variety_size/${variant.id}`);
-        setVariants(variants.filter(v => v.id !== variant.id)); // Update the local state
-        toast.success('Variant deleted successfully!');
+        await axios.delete(`http://localhost:3000/product_variety_size/${variantToDelete}`);
+        setVariants((prevVariants) => prevVariants.filter(variant => variant.size_variety_id !== variantToDelete));
+        toast.success('Variant deleted successfully.');
       } catch (error) {
-        console.error('Error deleting the variant:', error);
-        toast.error('Error deleting the variant.');
+        console.error('Error deleting variant:', error.response ? error.response.data : error.message);
+        toast.error('Error deleting variant.');
       }
+      setIsModalOpen(false);
     }
   };
 
-  // Helper function to get the product name by product ID
+  const openModal = (id) => {
+    setVariantToDelete(id);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setVariantToDelete(null);
+  };
+
   const getProductName = (productId) => {
     const product = products.find((product) => product.product_id === productId);
     return product ? product.product_name : 'Unknown Product';
@@ -72,15 +87,15 @@ const ProductVariants = () => {
         <tbody>
           {variants.length > 0 ? (
             variants.map((variant, index) => (
-              <tr key={variant.id}>
+              <tr key={variant.size_variety_id}>
                 <td>{index + 1}</td>
-                <td>{getProductName(variant.productId)}</td>
-                <td>{variant.name}</td>
+                <td>{getProductName(variant.product_id)}</td>
+                <td>{variant.size_name}</td>
                 <td>
-                  <Link to={`/variants/edit/${variant.productId}/${variant.name}`}>
+                  <Link to={`/variants/edit/${variant.size_variety_id}`}>
                     <button>Edit</button>
                   </Link>
-                  <button onClick={() => handleDeleteVariant(variant)}>Delete</button>
+                  <button onClick={() => openModal(variant.size_variety_id)}>Delete</button>
                 </td>
               </tr>
             ))
@@ -91,6 +106,20 @@ const ProductVariants = () => {
           )}
         </tbody>
       </table>
+
+      {/* Confirmation Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Confirm Delete"
+        className="Modal"
+        overlayClassName="Overlay"
+      >
+        <h2>Are you sure you want to delete this variant?</h2>
+        <button onClick={handleDelete}>Yes, Delete</button>
+        <button onClick={closeModal}>Cancel</button>
+      </Modal>
+      <Toaster /> {/* Toast notifications */}
     </div>
   );
 };

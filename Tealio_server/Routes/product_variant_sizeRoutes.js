@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+
 const { addProductVarietySize, 
         updateProductVarietySize, 
         deleteProductVarietySize, 
@@ -9,9 +10,6 @@ const { addProductVarietySize,
 // Add a new product variety size
 router.post('/', async (req, res) => {
     const { product_id, size_name } = req.body;
-    console.log('Request body:', req.body); // Log the entire request body
-    console.log('Product ID:', product_id); // Log product_id
-    console.log('Size Name:', size_name); // Log size_name
     
     if (!product_id) {
         return res.status(400).json({ error: 'Product ID is required' });

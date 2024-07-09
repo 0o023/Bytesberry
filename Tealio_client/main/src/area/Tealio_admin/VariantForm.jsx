@@ -80,7 +80,7 @@ const VariantForm = ({ addVariant, updateVariant }) => {
     setTimeout(() => {
       setSuccessMessage('');
       navigate('/variants');
-    }, 3000);
+    }, 2000);
   };
 
   const handleProductChange = (e) => {

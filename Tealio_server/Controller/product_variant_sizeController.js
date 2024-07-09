@@ -6,10 +6,10 @@ const addProductVarietySize = async (productId, sizeName) => {
             'SELECT * FROM add_product_variety_size($1, $2)',
             [productId, sizeName]
         );
-        return result.rows[0]; // Ensure this matches the expected result structure
+        return result.rows[0]; // Return the inserted product variety size
     } catch (err) {
         console.error('Error adding product variety size:', err.message);
-        throw err;
+        throw err; // Propagate the error to be handled by the caller
     }
 };
 
@@ -22,7 +22,7 @@ const updateProductVarietySize = async (sizeVarietyId, productId, sizeName) => {
         console.log('Product variety size updated successfully');
     } catch (err) {
         console.error('Error updating product variety size:', err.message);
-        throw err;
+        throw err; // Propagate the error to be handled by the caller
     }
 };
 
@@ -35,7 +35,7 @@ const deleteProductVarietySize = async (sizeVarietyId) => {
         console.log('Product variety size deleted successfully');
     } catch (err) {
         console.error('Error deleting product variety size:', err.message);
-        throw err;
+        throw err; // Propagate the error to be handled by the caller
     }
 };
 
@@ -45,10 +45,10 @@ const showProductVarietySize = async (sizeVarietyId) => {
             'SELECT * FROM show_product_variety_size($1)', 
             [sizeVarietyId]
         );
-        return result.rows[0]; // Ensure this matches the expected result structure
+        return result.rows[0]; // Return the found product variety size
     } catch (err) {
         console.error('Error showing product variety size:', err.message);
-        throw err;
+        throw err; // Propagate the error to be handled by the caller
     }
 };
 
@@ -57,10 +57,10 @@ const showAllProductVarietySize = async () => {
         const result = await pool.query(
             'SELECT * FROM show_all_product_variety_size()'
         );
-        return result.rows; // Ensure this matches the expected result structure
+        return result.rows; // Return all product variety sizes
     } catch (err) {
         console.error('Error showing all product variety sizes:', err.message);
-        throw err;
+        throw err; // Propagate the error to be handled by the caller
     }
 };
 

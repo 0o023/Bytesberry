@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import Modal from 'react-modal';
 
 Modal.setAppElement('#root'); // Accessibility feature for modal
 
 const ProductDetails = () => {
-  const [products, setProducts] = useState([]); // Correctly initialized state
+  const [products, setProducts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
   const navigate = useNavigate();
@@ -16,11 +16,8 @@ const ProductDetails = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://localhost:3000/product_generic_details');
-        if (response.data) {
-          setProducts(response.data); // Correctly updating state
-        } else {
-          toast.error('Failed to fetch products.');
-        }
+        console.log('Products fetched:', response.data); // Log the fetched products
+        setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error.response ? error.response.data : error.message);
         toast.error('Error fetching products.');
@@ -83,7 +80,7 @@ const ProductDetails = () => {
               <tr key={product.product_id}>
                 <td>{index + 1}</td>
                 <td>{product.product_name}</td>
-                <td>{product.product_discription}</td>
+                <td>{product.product_discription || 'No description available'}</td>
                 <td>
                   <button onClick={() => handleEdit(product.product_id)}>Edit</button>
                   <button onClick={() => openModal(product.product_id)}>Delete</button>
@@ -106,6 +103,7 @@ const ProductDetails = () => {
         <button onClick={handleDelete}>Yes, Delete</button>
         <button onClick={closeModal}>Cancel</button>
       </Modal>
+      <Toaster /> {/* Toast notifications */}
     </div>
   );
 };
