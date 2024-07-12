@@ -34,7 +34,12 @@ const ProductDetails = () => {
   const handleDelete = async () => {
     if (productToDelete) {
       try {
+        // First delete related records from utbl_product_variety_size
+        await axios.delete(`http://localhost:3000/product_variety_size/${productToDelete}`);
+        
+        // Then delete the product from utbl_product_generic_details
         await axios.delete(`http://localhost:3000/product_generic_details/${productToDelete}`);
+        
         setProducts((prevProducts) => prevProducts.filter(product => product.product_id !== productToDelete));
         toast.success('Product deleted successfully.');
       } catch (error) {

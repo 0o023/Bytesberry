@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 
 Modal.setAppElement('#root'); // Accessibility feature for modal
@@ -9,18 +9,18 @@ Modal.setAppElement('#root'); // Accessibility feature for modal
 const ProductInventory = () => {
   const [products, setProducts] = useState([]);
   const [variants, setVariants] = useState([]);
-  const [editStockId, setEditStockId] = useState(null);
-  const [stockValue, setStockValue] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [variantToEdit, setVariantToEdit] = useState(null);
+  const [stocks, setStocks] = useState([]);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState(null);
+  const [currentStock, setCurrentStock] = useState(0);
+  const [variantToDelete, setVariantToDelete] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://localhost:3000/product_generic_details');
-        console.log('Fetched products:', response.data);
         setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error.response ? error.response.data : error.message);
@@ -31,7 +31,6 @@ const ProductInventory = () => {
     const fetchVariants = async () => {
       try {
         const response = await axios.get('http://localhost:3000/product_variety_size');
-        console.log('Fetched variants:', response.data);
         setVariants(response.data);
       } catch (error) {
         console.error('Error fetching variants:', error.response ? error.response.data : error.message);
@@ -39,56 +38,74 @@ const ProductInventory = () => {
       }
     };
 
+    const fetchStocks = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/product_stock');
+        setStocks(response.data);
+      } catch (error) {
+        console.error('Error fetching stocks:', error.response ? error.response.data : error.message);
+        toast.error('Error fetching stocks.');
+      }
+    };
+
     fetchProducts();
     fetchVariants();
+    fetchStocks();
   }, []);
 
-  const handleStockChange = (variantId, stock) => {
-    setVariants(prevVariants =>
-      prevVariants.map(variant =>
-        variant.size_variety_id === variantId ? { ...variant, stock } : variant
-      )
-    );
-    setEditStockId(null); // Close the input field after updating
+  const handleEditStock = (variant) => {
+    setSelectedVariant(variant);
+    setCurrentStock(variant.stock || 0);
+    setIsEditModalOpen(true);
   };
 
-  const handleStockSubmit = async (e) => {
-    e.preventDefault();
-    if (isNaN(stockValue) || stockValue < 0) {
-      setErrorMessage('Please enter a valid stock number.');
-      return;
+  const handleStockUpdate = async (newStock) => {
+    if (selectedVariant) {
+      const { size_variety_id } = selectedVariant;
+      try {
+        await axios.put(`http://localhost:3000/product_variety_size/${size_variety_id}`, {
+          stock: newStock,
+        });
+        setVariants((prevVariants) =>
+          prevVariants.map((variant) =>
+            variant.size_variety_id === size_variety_id
+              ? { ...variant, stock: newStock }
+              : variant
+          )
+        );
+        toast.success('Stock updated successfully.');
+      } catch (error) {
+        console.error('Error updating stock:', error.response ? error.response.data : error.message);
+        toast.error('Error updating stock.');
+      }
+      setIsEditModalOpen(false);
     }
+  };
 
-    try {
-      await axios.post('http://localhost:3000/product_stock', {
-        id: variantToEdit,
-        stock: parseInt(stockValue, 10)
-      });
-      handleStockChange(variantToEdit, parseInt(stockValue, 10));
-      toast.success('Stock updated successfully.');
-    } catch (error) {
-      console.error('Error updating stock:', error.response ? error.response.data : error.message);
-      toast.error('Error updating stock.');
+  const handleDeleteConfirmation = (variantId) => {
+    setVariantToDelete(variantId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleStockDelete = async () => {
+    if (variantToDelete) {
+      try {
+        await axios.delete(`http://localhost:3000/product_stock/${variantToDelete}`);
+        setStocks((prevStocks) => prevStocks.filter((stock) => stock.size_variety_id !== variantToDelete));
+        toast.success('Stock deleted successfully.');
+      } catch (error) {
+        console.error('Error deleting stock:', error.response ? error.response.data : error.message);
+        toast.error('Error deleting stock.');
+      }
+      setIsDeleteModalOpen(false);
     }
-
-    setStockValue('');
-    setErrorMessage('');
-    setIsModalOpen(false);
-  };
-
-  const handleEditClick = (variantId, currentStock) => {
-    setVariantToEdit(variantId);
-    setStockValue(currentStock !== undefined ? currentStock : '0'); // Default to '0' if currentStock is undefined
-    setIsModalOpen(true); // Open the modal to edit stock
-  };
-
-  const handleNavigation = (id) => {
-    navigate(`/inventory/update_stock/${id}`);
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
-    setVariantToEdit(null);
+    setIsEditModalOpen(false);
+    setIsDeleteModalOpen(false);
+    setSelectedVariant(null);
+    setVariantToDelete(null);
   };
 
   const getProductName = (productId) => {
@@ -99,88 +116,89 @@ const ProductInventory = () => {
   return (
     <div className="content">
       <h2>Product Inventory</h2>
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
-      {products.length === 0 ? (
-        <p>No products available. Please add a product.</p>
-      ) : (
-        <table className="product-table">
-          <thead>
-            <tr>
-              <th>Sl. No</th>
-              <th>Product</th>
-              <th>Variant</th>
-              <th>Stock</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {variants.length > 0 ? (
-              variants.map((variant, index) => (
+      <Link to="/inventory/add">
+        <button>Add Stock</button>
+      </Link>
+      <table className="product-table">
+        <thead>
+          <tr>
+            <th>Sl. No</th>
+            <th>Product</th>
+            <th>Variant</th>
+            <th>Stock</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {variants.length > 0 ? (
+            variants.map((variant, index) => {
+              const product = getProductName(variant.product_id);
+              const stock = stocks.find((stock) => stock.size_variety_id === variant.size_variety_id);
+              const currentStock = stock ? stock.stock_quantity : 0;
+
+              return (
                 <tr key={variant.size_variety_id}>
                   <td>{index + 1}</td>
-                  <td>{getProductName(variant.product_id)}</td>
+                  <td>{product}</td>
                   <td>{variant.size_name}</td>
+                  <td>{currentStock}</td>
                   <td>
-                    {editStockId === variant.size_variety_id ? (
-                      <form onSubmit={handleStockSubmit} className="stock-form">
-                        <input
-                          type="number"
-                          value={stockValue}
-                          onChange={(e) => setStockValue(e.target.value)}
-                          min="0"
-                          required
-                        />
-                        <button type="submit">Update</button>
-                        <button type="button" onClick={closeModal}>Cancel</button>
-                      </form>
-                    ) : (
-                      <span>{variant.stock !== undefined ? variant.stock : '0'}</span>
-                    )}
-                  </td>
-                  <td>
-                    {editStockId === variant.size_variety_id ? (
-                      <button type="button" onClick={closeModal}>Cancel</button>
-                    ) : (
-                      <>
-                        <button type="button" onClick={() => handleEditClick(variant.size_variety_id, variant.stock)}>Edit Stock</button>
-                      </>
-                    )}
+                    <button onClick={() => handleEditStock(variant)}>Edit</button>
+                    <button onClick={() => handleDeleteConfirmation(variant.size_variety_id)}>Delete</button>
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5">No variants available</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      )}
+              );
+            })
+          ) : (
+            <tr>
+              <td colSpan="5">No variants available</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
 
-      {/* Stock Edit Modal */}
+      {/* Edit Stock Modal */}
       <Modal
-        isOpen={isModalOpen}
+        isOpen={isEditModalOpen}
         onRequestClose={closeModal}
         contentLabel="Edit Stock"
         className="Modal"
         overlayClassName="Overlay"
       >
         <h2>Edit Stock</h2>
-        <form onSubmit={handleStockSubmit}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleStockUpdate(currentStock);
+          }}
+        >
           <label>
-            Stock:
+            Current Stock:
             <input
               type="number"
-              value={stockValue}
-              onChange={(e) => setStockValue(e.target.value)}
-              min="0"
-              required
+              value={currentStock}
+              onChange={(e) => setCurrentStock(e.target.value)}
             />
           </label>
-          <button type="submit">Update</button>
-          <button type="button" onClick={closeModal}>Cancel</button>
+          <button type="submit">Update Stock</button>
         </form>
+        <button onClick={closeModal}>Close</button>
       </Modal>
+
+      {/* Delete Stock Modal */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Delete Stock"
+        className="Modal"
+        overlayClassName="Overlay"
+      >
+        <h2>Delete Stock</h2>
+        <p>Are you sure you want to delete this stock?</p>
+        <button onClick={handleStockDelete}>Delete</button>
+        <button onClick={closeModal}>Cancel</button>
+      </Modal>
+
       <Toaster /> {/* Toast notifications */}
     </div>
   );

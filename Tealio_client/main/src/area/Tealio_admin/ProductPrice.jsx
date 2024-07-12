@@ -1,101 +1,141 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
+import Modal from 'react-modal';
 
-const ProductPrice = ({ products = [], prices = [], addPrice }) => {
-  const [selectedProduct, setSelectedProduct] = useState('');
-  const [selectedVariant, setSelectedVariant] = useState('');
-  const [price, setPrice] = useState('');
+Modal.setAppElement('#root'); // Accessibility feature for modal
+
+const ProductPrice = () => {
+  const [prices, setPrices] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [variants, setVariants] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [priceToDelete, setPriceToDelete] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Reset selectedVariant when selectedProduct changes
-    setSelectedVariant('');
-  }, [selectedProduct]);
-
-  const handleAddPrice = () => {
-    if (!selectedProduct || !selectedVariant || !price) {
-      alert('Please select a product, variant, and enter a price.');
-      return;
-    }
-
-    const newPrice = {
-      productId: selectedProduct,
-      variantName: selectedVariant,
-      price: price,
+    const fetchPrices = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/product_price');
+        setPrices(response.data);
+      } catch (error) {
+        console.error('Error fetching prices:', error.response ? error.response.data : error.message);
+        toast.error('Error fetching prices.');
+      }
     };
-    addPrice(newPrice);
-    setSelectedProduct('');
-    setSelectedVariant('');
-    setPrice('');
+
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/product_generic_details');
+        setProducts(response.data);
+      } catch (error) {
+        console.error('Error fetching products:', error.response ? error.response.data : error.message);
+        toast.error('Error fetching products.');
+      }
+    };
+
+    const fetchVariants = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/product_variety_size');
+        setVariants(response.data);
+      } catch (error) {
+        console.error('Error fetching variants:', error.response ? error.response.data : error.message);
+        toast.error('Error fetching variants.');
+      }
+    };
+
+    fetchPrices();
+    fetchProducts();
+    fetchVariants();
+  }, []);
+
+  const getProductById = (id) => products.find((product) => product.product_id === id);
+  const getVariantById = (id) => variants.find((variant) => variant.size_variety_id === id);
+
+  const handleEdit = (id) => {
+    navigate(`/price/edit/${id}`);
   };
 
-  const handleProductClick = (productId) => {
-    navigate(`/details/edit/${productId}`); // Navigate to product details page
+  const handleDelete = async () => {
+    if (priceToDelete) {
+      try {
+        await axios.delete(`http://localhost:3000/product_price/${priceToDelete}`);
+        setPrices((prevPrices) => prevPrices.filter((price) => price.price_id !== priceToDelete));
+        toast.success('Price deleted successfully.');
+      } catch (error) {
+        console.error('Error deleting price:', error.response ? error.response.data : error.message);
+        toast.error('Error deleting price.');
+      }
+      setIsModalOpen(false);
+    }
   };
 
-  // Get variants for the selected product
-  const selectedProductVariants = products.find(product => product.id === selectedProduct)?.variants || [];
+  const openModal = (id) => {
+    setPriceToDelete(id);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setPriceToDelete(null);
+  };
 
   return (
-    <div className="content">
-      <h2>Product Price</h2>
-
-      {products.length === 0 ? (
-        <p>No products available. Please add a product before setting prices.</p>
-      ) : (
-        <>
-          <select value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)}>
-            <option value="" disabled>Select Product</option>
-            {products.map((product) => (
-              <option key={product.id} value={product.id}>{product.name}</option>
-            ))}
-          </select>
-
-          {selectedProduct && (
-            <>
-              <select value={selectedVariant} onChange={(e) => setSelectedVariant(e.target.value)}>
-                <option value="" disabled>Select Variant</option>
-                {selectedProductVariants.map((variant) => (
-                  <option key={variant.name} value={variant.name}>{variant.name}</option>
-                ))}
-              </select>
-            </>
-          )}
-
-          <input
-            type="text"
-            placeholder="Price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-          />
-          <button onClick={handleAddPrice}>Add Price</button>
-        </>
-      )}
-
-      {prices.length > 0 && (
-        <table>
-          <thead>
+    <div>
+      <h2>Product Prices</h2>
+      <Link to="/price/add">
+        <button>Add New Price</button>
+      </Link>
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Variant</th>
+            <th>Price</th>
+            <th>Discount</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {prices.length === 0 ? (
             <tr>
-              <th>Product ID</th>
-              <th>Variant</th>
-              <th>Price</th>
+              <td colSpan="5">No prices available</td>
             </tr>
-          </thead>
-          <tbody>
-            {prices.map((priceData, index) => (
-              <tr key={index}>
-                <td>
-                  <button onClick={() => handleProductClick(priceData.productId)}>
-                    {priceData.productId}
-                  </button>
-                </td>
-                <td>{priceData.variantName}</td>
-                <td>{priceData.price}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+          ) : (
+            prices.map((price) => {
+              const product = getProductById(price.product_id);
+              const variant = getVariantById(price.size_variety_id);
+              return (
+                <tr key={price.price_id}>
+                  <td>{product ? product.product_name : 'Unknown Product'}</td>
+                  <td>{variant ? variant.size_name : 'Unknown Variant'}</td>
+                  <td>{price.price}</td>
+                  <td>{price.discount_percentage}%</td>
+                  <td>
+                    <button onClick={() => handleEdit(price.price_id)}>Edit</button>
+                    <button onClick={() => openModal(price.price_id)}>Delete</button>
+                  </td>
+                </tr>
+              );
+            })
+          )}
+        </tbody>
+      </table>
+
+      {/* Confirmation Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Confirm Delete"
+        className="Modal"
+        overlayClassName="Overlay"
+      >
+        <h2>Are you sure you want to delete this price?</h2>
+        <button onClick={handleDelete}>Yes, Delete</button>
+        <button onClick={closeModal}>Cancel</button>
+      </Modal>
+      <Toaster /> {/* Toast notifications */}
     </div>
   );
 };

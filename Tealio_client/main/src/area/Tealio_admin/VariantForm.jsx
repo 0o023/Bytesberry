@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -12,6 +13,7 @@ const VariantForm = ({ addVariant, updateVariant }) => {
   const navigate = useNavigate();
   const { productId: paramProductId, variantName: paramVariantName } = useParams();
 
+  // Fetch products
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -26,57 +28,96 @@ const VariantForm = ({ addVariant, updateVariant }) => {
     fetchProducts();
   }, []);
 
+  // Fetch existing variant for editing
   useEffect(() => {
     if (paramProductId && paramVariantName) {
-      const existingVariant = products
-        .flatMap((product) => product.variants || [])
-        .find((variant) => variant.productId === paramProductId && variant.name === paramVariantName);
+      const fetchVariant = async () => {
+        try {
+          const response = await axios.get(`http://localhost:3000/product_variety_size?productId=${paramProductId}`);
+          const data = response.data;
 
-      if (existingVariant) {
-        setProductId(existingVariant.productId);
-        setVariantName(existingVariant.name);
-        const selectedProduct = products.find(product => product.product_id === existingVariant.productId);
-        setProductName(selectedProduct ? selectedProduct.product_name : 'Unknown Product');
-      }
+          // Log the response to check its structure
+          console.log('Response data:', data);
+
+          // Check if data is an array and find the variant
+          if (Array.isArray(data)) {
+            const existingVariant = data.find((variant) => variant.size_name === paramVariantName);
+
+            if (existingVariant) {
+              setProductId(existingVariant.product_id);
+              setVariantName(existingVariant.size_name);
+              const selectedProduct = products.find(product => product.product_id === existingVariant.product_id);
+              setProductName(selectedProduct ? selectedProduct.product_name : 'Unknown Product');
+            } else {
+              toast.error('Variant not found.');
+            }
+          } else {
+            toast.error('Unexpected response format.');
+          }
+        } catch (error) {
+          console.error('Error fetching variant:', error);
+          toast.error('Error fetching variant.');
+        }
+      };
+
+      fetchVariant();
+    } else {
+      // Reset state when adding a new variant
+      setProductId('');
+      setVariantName('');
+      setProductName('');
     }
   }, [paramProductId, paramVariantName, products]);
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!productId || !variantName) {
       toast.error('Please fill in all fields.');
       return;
     }
-
+  
     const variant = {
       product_id: productId,
       size_name: variantName
     };
-
-    console.log('Submitting variant:', variant); // Debug: log the variant being submitted
-
+  
     try {
       if (paramProductId && paramVariantName) {
-        await axios.put(`http://localhost:3000/product_variety_size/${paramProductId}`, variant, {
+        console.log('Updating variant:', variant); // Log payload
+        const response = await axios.put(`http://localhost:3000/product_variety_size/${paramProductId}`, variant, {
           headers: { 'Content-Type': 'application/json' }
         });
-        updateVariant(variant);
-        setSuccessMessage('Variant successfully updated!');
-        toast.success('Variant successfully updated!');
+        console.log('Update response:', response.data); // Log server response
+  
+        if (response.data) {
+          updateVariant(variant);
+          setSuccessMessage('Variant successfully updated!');
+          toast.success('Variant successfully updated!');
+        } else {
+          toast.error('Failed to update variant.');
+        }
       } else {
-        await axios.post('http://localhost:3000/product_variety_size', variant, {
+        console.log('Adding variant:', variant); // Log payload
+        const response = await axios.post('http://localhost:3000/product_variety_size', variant, {
           headers: { 'Content-Type': 'application/json' }
         });
-        addVariant(variant);
-        setSuccessMessage('Variant successfully added!');
-        toast.success('Variant successfully added!');
+        console.log('Add response:', response.data); // Log server response
+  
+        if (response.data) {
+          addVariant(variant);
+          setSuccessMessage('Variant successfully added!');
+          toast.success('Variant successfully added!');
+        } else {
+          toast.error('Failed to add variant.');
+        }
       }
     } catch (error) {
       console.error('Error saving the variant:', error);
       toast.error('Error saving the variant.');
     }
-
+  
     setTimeout(() => {
       setSuccessMessage('');
       navigate('/variants');
@@ -97,6 +138,7 @@ const VariantForm = ({ addVariant, updateVariant }) => {
         <select
           value={productId}
           onChange={handleProductChange}
+          disabled={paramProductId && paramVariantName} // Disable dropdown during editing
         >
           <option value="" disabled>Select Product</option>
           {products.map((product) => (
@@ -107,12 +149,12 @@ const VariantForm = ({ addVariant, updateVariant }) => {
         </select>
         <input
           type="text"
-          placeholder="Variant Name"
+          placeholder="Variant"
           value={variantName}
           onChange={(e) => setVariantName(e.target.value)}
         />
         <button type="submit">
-          {paramProductId && paramVariantName ? 'Update Variant' : 'Add Variant'}
+          {paramProductId && paramVariantName ? 'Update' : 'Add'}
         </button>
       </form>
       {successMessage && <p className="success-message">{successMessage}</p>}

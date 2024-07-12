@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import Modal from 'react-modal';
@@ -11,13 +11,11 @@ const ProductVariants = () => {
   const [variants, setVariants] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [variantToDelete, setVariantToDelete] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://localhost:3000/product_generic_details');
-        console.log('Products fetched:', response.data);
         setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error.response ? error.response.data : error.message);
@@ -28,7 +26,6 @@ const ProductVariants = () => {
     const fetchVariants = async () => {
       try {
         const response = await axios.get('http://localhost:3000/product_variety_size');
-        console.log('Variants fetched:', response.data);
         setVariants(response.data);
       } catch (error) {
         console.error('Error fetching variants:', error.response ? error.response.data : error.message);
@@ -38,7 +35,7 @@ const ProductVariants = () => {
 
     fetchProducts();
     fetchVariants();
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   const handleDelete = async () => {
     if (variantToDelete) {
@@ -51,6 +48,7 @@ const ProductVariants = () => {
         toast.error('Error deleting variant.');
       }
       setIsModalOpen(false);
+      setVariantToDelete(null); // Reset the variantToDelete state
     }
   };
 
@@ -61,13 +59,21 @@ const ProductVariants = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setVariantToDelete(null);
+    setVariantToDelete(null); // Reset the variantToDelete state
   };
 
   const getProductName = (productId) => {
     const product = products.find((product) => product.product_id === productId);
     return product ? product.product_name : 'Unknown Product';
   };
+
+  const groupedVariants = variants.reduce((acc, variant) => {
+    if (!acc[variant.product_id]) {
+      acc[variant.product_id] = [];
+    }
+    acc[variant.product_id].push(variant);
+    return acc;
+  }, {});
 
   return (
     <div className="content">
@@ -85,20 +91,27 @@ const ProductVariants = () => {
           </tr>
         </thead>
         <tbody>
-          {variants.length > 0 ? (
-            variants.map((variant, index) => (
-              <tr key={variant.size_variety_id}>
-                <td>{index + 1}</td>
-                <td>{getProductName(variant.product_id)}</td>
-                <td>{variant.size_name}</td>
-                <td>
-                  <Link to={`/variants/edit/${variant.size_variety_id}`}>
-                    <button>Edit</button>
-                  </Link>
-                  <button onClick={() => openModal(variant.size_variety_id)}>Delete</button>
-                </td>
-              </tr>
-            ))
+          {Object.keys(groupedVariants).length > 0 ? (
+            Object.keys(groupedVariants).map((productId, index) => {
+              const productVariants = groupedVariants[productId];
+              return productVariants.map((variant, variantIndex) => (
+                <tr key={variant.size_variety_id}>
+                  {variantIndex === 0 ? (
+                    <td rowSpan={productVariants.length}>{index + 1}</td>
+                  ) : null}
+                  {variantIndex === 0 ? (
+                    <td rowSpan={productVariants.length}>{getProductName(productId)}</td>
+                  ) : null}
+                  <td>{variant.size_name}</td>
+                  <td>
+                    <Link to={`/variants/edit/${variant.product_id}/${variant.size_name}`}>
+                      <button>Edit</button>
+                    </Link>
+                    <button onClick={() => openModal(variant.size_variety_id)}>Delete</button>
+                  </td>
+                </tr>
+              ));
+            })
           ) : (
             <tr>
               <td colSpan="4">No variants available</td>

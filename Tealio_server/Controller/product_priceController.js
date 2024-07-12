@@ -1,6 +1,6 @@
-
 const pool = require('../db/pool');
 
+// Add a product price and discount
 const addProductPrice = async (productId, sizeVarietyId, price, discountPercentage) => {
     try {
         const result = await pool.query(
@@ -14,6 +14,7 @@ const addProductPrice = async (productId, sizeVarietyId, price, discountPercenta
     }
 };
 
+// Update a product price and discount
 const updateProductPrice = async (priceId, productId, sizeVarietyId, price, discountPercentage) => {
     try {
         await pool.query(
@@ -27,6 +28,7 @@ const updateProductPrice = async (priceId, productId, sizeVarietyId, price, disc
     }
 };
 
+// Delete a product price
 const deleteProductPrice = async (priceId) => {
     try {
         await pool.query(
@@ -40,6 +42,7 @@ const deleteProductPrice = async (priceId) => {
     }
 };
 
+// Show a product price
 const showProductPrice = async (priceId) => {
     try {
         const result = await pool.query(
@@ -53,6 +56,7 @@ const showProductPrice = async (priceId) => {
     }
 };
 
+// Show all product prices
 const showAllProductPrices = async () => {
     try {
         const result = await pool.query(

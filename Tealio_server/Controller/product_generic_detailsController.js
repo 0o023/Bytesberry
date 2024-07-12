@@ -1,5 +1,4 @@
 const pool = require('../db/pool');
- 
 
 // Helper function to validate inputs
 const validateProductDetails = (productName, productDescription, productImages) => {
@@ -57,12 +56,28 @@ const deleteProductGenericDetails = async (productId) => {
             throw new Error('Invalid product ID');
         }
 
+        // Begin a transaction
+        await pool.query('BEGIN');
+
+        // First, delete related records from utbl_product_variety_size
         await pool.query(
-            'SELECT delete_product_generic_details($1)',
-            [Number(productId)] // Ensure productId is an integer
+            'DELETE FROM utbl_product_variety_size WHERE product_id = $1',
+            [Number(productId)]
         );
-        console.log('Product generic details deleted successfully');
+
+        // Then, delete the product from utbl_product_generic_details
+        await pool.query(
+            'DELETE FROM utbl_product_generic_details WHERE product_id = $1',
+            [Number(productId)]
+        );
+
+        // Commit the transaction
+        await pool.query('COMMIT');
+
+        console.log('Product generic details and related records deleted successfully');
     } catch (err) {
+        // Rollback the transaction in case of error
+        await pool.query('ROLLBACK');
         console.error('Error deleting product generic details:', err.message);
         throw err; // Propagate the error to be handled by the caller
     }
