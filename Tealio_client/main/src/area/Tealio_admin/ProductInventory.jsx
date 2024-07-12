@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
 
 Modal.setAppElement('#root'); // Accessibility feature for modal
@@ -15,7 +15,6 @@ const ProductInventory = () => {
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [currentStock, setCurrentStock] = useState(0);
   const [variantToDelete, setVariantToDelete] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -98,6 +97,7 @@ const ProductInventory = () => {
         toast.error('Error deleting stock.');
       }
       setIsDeleteModalOpen(false);
+      setVariantToDelete(null); // Reset state after successful deletion
     }
   };
 
@@ -156,34 +156,6 @@ const ProductInventory = () => {
           )}
         </tbody>
       </table>
-
-      {/* Edit Stock Modal */}
-      <Modal
-        isOpen={isEditModalOpen}
-        onRequestClose={closeModal}
-        contentLabel="Edit Stock"
-        className="Modal"
-        overlayClassName="Overlay"
-      >
-        <h2>Edit Stock</h2>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleStockUpdate(currentStock);
-          }}
-        >
-          <label>
-            Current Stock:
-            <input
-              type="number"
-              value={currentStock}
-              onChange={(e) => setCurrentStock(e.target.value)}
-            />
-          </label>
-          <button type="submit">Update Stock</button>
-        </form>
-        <button onClick={closeModal}>Close</button>
-      </Modal>
 
       {/* Delete Stock Modal */}
       <Modal
