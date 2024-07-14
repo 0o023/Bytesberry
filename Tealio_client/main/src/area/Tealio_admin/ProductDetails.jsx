@@ -15,7 +15,7 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/product_generic_details');
+        const response = await axios.get('http://localhost:5000/product_generic_details');
         console.log('Products fetched:', response.data); // Log the fetched products
         setProducts(response.data);
       } catch (error) {
@@ -35,10 +35,10 @@ const ProductDetails = () => {
     if (productToDelete) {
       try {
         // First delete related records from utbl_product_variety_size
-        await axios.delete(`http://localhost:3000/product_variety_size/${productToDelete}`);
+        await axios.delete(`http://localhost:5000/product_variety_size/${productToDelete}`);
         
         // Then delete the product from utbl_product_generic_details
-        await axios.delete(`http://localhost:3000/product_generic_details/${productToDelete}`);
+        await axios.delete(`http://localhost:5000/product_generic_details/${productToDelete}`);
         
         setProducts((prevProducts) => prevProducts.filter(product => product.product_id !== productToDelete));
         toast.success('Product deleted successfully.');
