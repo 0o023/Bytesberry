@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { addProductStock, updateProductStock, deleteProductStock, showProductStock, showAllProductStock } = require('../Controller/product_stockController');
+const { addProductStock, updateProductStock, deleteProductStockByVariety, showProductStock, showAllProductStock,checkProductStockExists } = require('../Controller/product_stockController');
 
 // Add a product stock
 router.post('/', async (req, res) => {
@@ -28,6 +28,16 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.post('/check', async (req, res) => {
+    const { product_id, size_variety_id } = req.body;
+    try {
+        const exists = await checkProductStockExists(product_id, size_variety_id);
+        res.json({ exists });
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
+
 // Update a product stock
 router.put('/:stockId', async (req, res) => {
     const { stockId } = req.params;
@@ -41,7 +51,17 @@ router.put('/:stockId', async (req, res) => {
 });
 
 // Delete a product stock
-router.delete('/:stockId', async (req, res) => {
+router.delete('/:sizeVarietyId', async (req, res) => {
+    const { sizeVarietyId } = req.params;
+    try {
+        await deleteProductStockByVariety(sizeVarietyId);
+        res.send('Product stock deleted successfully');
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
+
+/*router.delete('/:stockId', async (req, res) => {
     const { stockId } = req.params;
     try {
         await deleteProductStock(stockId);
@@ -49,7 +69,7 @@ router.delete('/:stockId', async (req, res) => {
     } catch (err) {
         res.status(500).send(err.message);
     }
-});
+});*/
 
 // Show a product stock
 router.get('/:stockId', async (req, res) => {

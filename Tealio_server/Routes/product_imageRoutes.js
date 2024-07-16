@@ -5,7 +5,9 @@ const {
     updateProductImage,
     deleteProductImage,
     showProductImage,
-    showAllproductImage}=require('../Controller/product_imageController');
+    showAllproductImage,
+    showProductImagesByProductId,
+    addProductImagesByProductId }=require('../Controller/product_imageController');
     
     router.put('/:fileId',async(req,res)=>{
         const { fileId }=req.params;
@@ -49,6 +51,26 @@ const {
         }
         catch(err){
                 res.status(500).send(err.message);
+        }
+    });
+
+    router.get('/product/:productId', async (req, res) => {
+        const { productId } = req.params;
+        try {
+            const result = await showProductImagesByProductId(productId);
+            res.json(result);
+        } catch (err) {
+            res.status(500).send(err.message);
+        }
+    });
+
+    router.post('/add', async (req, res) => {
+        const { product_id, images } = req.body;
+        try {
+            await addProductImagesByProductId(product_id, JSON.stringify(images));
+            res.send('Product images added successfully');
+        } catch (err) {
+            res.status(500).send(err.message);
         }
     });
 

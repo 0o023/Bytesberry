@@ -56,5 +56,30 @@ const pool= require('../db/pool');
         }
     };
 
-    module.exports={updateProductImage,deleteProductImage,showProductImage,showAllproductImage};
+
+    const showProductImagesByProductId = async (productId) => {
+        try {
+            const result = await pool.query(
+                'SELECT * FROM show_product_images_by_product_id($1)', [productId]
+            );
+            return result.rows;
+        } catch (err) {
+            console.error('Error showing product images by product ID:', err.message);
+            throw err;
+        }
+    };
+
+    const addProductImagesByProductId = async (productId, images) => {
+        try {
+            await pool.query(
+                'SELECT add_product_image_by_product_id($1, $2)', [productId, images]
+            );
+            console.log('Product images added successfully');
+        } catch (err) {
+            console.error('Error adding product images:', err.message);
+            throw err;
+        }
+    };
+
+    module.exports={updateProductImage,deleteProductImage,showProductImage,showAllproductImage,showProductImagesByProductId,addProductImagesByProductId};
 

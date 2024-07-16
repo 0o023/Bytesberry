@@ -10,18 +10,18 @@ const { addProductPrice,
 // Add a product price
 router.post('/', async (req, res) => {
     const { product_id, size_variety_id, price, discount_percentage } = req.body;
-    
-    if (!product_id || !size_variety_id || !price || !discount_percentage) {
-        return res.status(400).json({ error: 'All fields are required' });
+  
+    if (product_id === undefined || size_variety_id === undefined || price === undefined || discount_percentage === undefined) {
+      return res.status(400).json({ error: 'All fields are required' });
     }
-    
+  
     try {
-        const result = await addProductPrice(product_id, size_variety_id, price, discount_percentage);
-        res.json(result);
+      const result = await addProductPrice(product_id, size_variety_id, price, discount_percentage);
+      res.json(result);
     } catch (err) {
-        res.status(500).send(err.message);
+      res.status(500).send(err.message);
     }
-});
+  });
 
 // Update a product price
 router.put('/:priceId', async (req, res) => {

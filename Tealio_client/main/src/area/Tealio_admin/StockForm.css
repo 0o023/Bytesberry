@@ -1,0 +1,76 @@
+.stock-form {
+  max-width: 600px; /* Adjust according to your design */
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ddd; /* Use a subtle border color */
+  border-radius: 8px; /* Match existing border-radius */
+  background-color: #ffffff; /* Use the background color consistent with your app */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for better visibility */
+  color: black;
+}
+
+.stock-form h2 {
+  font-size: 1.5rem; /* Use consistent font size */
+  color: #333; /* Dark color for text */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.stock-form label {
+  display: block;
+  font-size: 1rem; /* Match font size with other forms */
+  color: #070707; /* Slightly lighter color for labels */
+  margin-bottom: 8px;
+}
+
+.stock-form select,
+.stock-form input {
+  width: 100%;
+  padding: 12px; /* Ensure padding is consistent */
+  border: 1px solid #ccc; /* Subtle border color */
+  border-radius: 4px; /* Consistent border-radius */
+  margin-bottom: 16px; /* Space between elements */
+  font-size: 1rem; /* Font size for input fields */
+  box-sizing: border-box; /* Include padding in width */
+}
+
+.stock-form select:focus,
+.stock-form input:focus {
+  border-color: #007bff; /* Highlight border on focus */
+  outline: none; /* Remove default outline */
+}
+
+.stock-form .error-message {
+  color: #f50606; /* Red color for error messages */
+  font-size: 0.875rem; /* Slightly smaller font size */
+  margin-bottom: 16px;
+}
+
+.stock-form button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  color: #fff9f9; /* White text color */
+  font-size: 1rem; /* Consistent font size */
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth color transition */
+  margin-right: 10px; /* Space between buttons */
+}
+
+.stock-form button.add-stock,
+.stock-form button.update-stock {
+  background-color: #125923; /* Green color for Add and Update buttons */
+}
+
+.stock-form button.add-stock:hover,
+.stock-form button.update-stock:hover {
+  background-color: #125923; /* Darker green shade for hover effect */
+}
+
+.stock-form button.cancel {
+  background-color: #125923; /* Secondary button color */
+}
+
+.stock-form button.cancel:hover {
+  background-color: #5a6268; /* Darker shade for hover effect */
+}

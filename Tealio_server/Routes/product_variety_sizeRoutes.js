@@ -32,13 +32,27 @@ router.post('/', async (req, res) => {
 router.put('/:sizeVarietyId', async (req, res) => {
     const { sizeVarietyId } = req.params;
     const { product_id, size_name } = req.body;
+    console.log(product_id);
+    console.log(size_name);
+    console.log(sizeVarietyId);
+    try {
+      await updateProductVarietySize(sizeVarietyId, product_id, size_name);
+      res.send('Product variety size updated successfully');
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  });
+  
+/*router.put('/:sizeVarietyId', async (req, res) => {
+    const { sizeVarietyId } = req.params;
+    const { product_id, size_name } = req.body;
     try {
         await updateProductVarietySize(sizeVarietyId, product_id, size_name);
         res.send('Product variety size updated successfully');
     } catch (err) {
         res.status(500).send(err.message);
     }
-});
+});*/
 
 // Delete a product variety size
 router.delete('/:sizeVarietyId', async (req, res) => {
